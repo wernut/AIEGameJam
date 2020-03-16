@@ -11,6 +11,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XboxCtrlrInput;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -33,10 +34,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Obtaining axis values from unity input system:
-        _vAxis = Input.GetAxis("Vertical");
-        _hAxis = Input.GetAxis("Horizontal");
-        _hRotAxis = Input.GetAxis("A_Horizontal");
+        // Checking if the player has a controller assigned to them: 
+        if(handler.HasAssignedController())
+        {
+            // Obtaining axis values from xbox controller:
+            _vAxis    = XCI.GetAxis(XboxAxis.LeftStickX,  handler.AssignedController);
+            _hAxis    = XCI.GetAxis(XboxAxis.LeftStickY,  handler.AssignedController);
+            _hRotAxis = XCI.GetAxis(XboxAxis.RightStickX, handler.AssignedController);
+        }
+        else
+        {
+            // Obtaining axis values from unity input system:
+            _vAxis    = Input.GetAxis("Vertical");
+            _hAxis    = Input.GetAxis("Horizontal");
+            _hRotAxis = Input.GetAxis("A_Horizontal");
+        }
 
         // Calculating total movement based on both vectors:
         Vector3 totalMovement = ((Vector3.forward * _vAxis) + (Vector3.right * _hAxis)) * speed * Time.fixedDeltaTime;
