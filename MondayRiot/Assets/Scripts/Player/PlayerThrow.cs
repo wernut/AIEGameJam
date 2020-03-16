@@ -4,19 +4,28 @@ using UnityEngine;
 
 public class PlayerThrow : MonoBehaviour
 {
-    private PlayerHandler _handler;
+    private PlayerHandler handler;
 
     // Object in hand variables:
-    private LayerMask _objectLayer;
-    private bool _justThrewObject = false;
+    private Animator rightHandAnimator, bothHandsAnimator;
+    private Transform modelTransform;
+    private LayerMask objectLayer;
+    private bool justThrewObject = false;
+    private float animationSpeed = 0.0f;
 
     [Header("Attributes")]
     public KeyCode interactKey;
     public KeyCode cancelKey;
-    public Transform handTransform;
-    public Vector3 handPositionOffset;
     public float forwardForce = 10.0f;
     public float upForce = 5.0f;
+
+    [Header("Transforms and Offsets")]
+    public Transform bothHandTransform;
+    public Vector3 bothHandPositionOffset;
+    public Transform rightHandTransform;
+    public Vector3 rightHandPositionOffset;
+
+    [Header("Timers")]
     public float coolDownTime = 2.0f; 
     public float waitInRealTimeDivider = 6.0f; // How long it takes for the object to be thrown. Mass / waitInRealTimeDivider
 
@@ -28,31 +37,37 @@ public class PlayerThrow : MonoBehaviour
 
     private void Awake()
     {
-        _handler = this.GetComponent<PlayerHandler>();
+        handler = this.GetComponent<PlayerHandler>();
+        rightHandAnimator = handler.RightHandAnimator;
+        bothHandsAnimator = handler.BothHandsAnimator;
+        modelTransform = handler.ModelTransform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyUp(interactKey) && !_justThrewObject)
+        if(Input.GetKeyUp(interactKey) && !justThrewObject)
         {
             // Picking up an object if hand is empty:
-            if (_handler.ObjectInHand == null)
+            if (handler.ObjectInHand == null)
             {
                 // Find objects within a certain radius:
-                RaycastHit[] objects = Physics.SphereCastAll(_handler.ModelTransform.position + offset, sphereCastRadius, _handler.ModelTransform.forward, sphereCastMaxDistance, layer);
+                RaycastHit[] objects = Physics.SphereCastAll(modelTransform.position + offset, sphereCastRadius, modelTransform.forward, sphereCastMaxDistance, layer);
 
                 // Finding the first object with a rigid body and picking it up:
                 for (int i = 0; i < objects.Length; ++i)
                 {
                     // If the object is the model, continue:
-                    if (objects[i].transform.gameObject == _handler.ModelTransform.gameObject)
+                    if (objects[i].transform.gameObject == modelTransform.gameObject)
                         continue;
 
-                    _handler.RBOfObjectInHand = objects[i].transform.gameObject.GetComponent<Rigidbody>();
-                    if (_handler.RBOfObjectInHand != null)
+                    handler.RBOfObjectInHand = objects[i].transform.gameObject.GetComponent<Rigidbody>();
+                    if (handler.RBOfObjectInHand != null)
                     {
-                        PickUpObject(objects[i].transform.gameObject);
+                        if(handler.RBOfObjectInHand.mass > 5)
+                            PickUpObject(objects[i].transform.gameObject, true);
+                        else
+                            PickUpObject(objects[i].transform.gameObject, false);
                         break;
                     }
                 }
@@ -60,89 +75,133 @@ public class PlayerThrow : MonoBehaviour
             // Throwing object in hand:
             else
             {
-                StartCoroutine(ThrowSequence());
+                if (handler.RBOfObjectInHand.mass > 5)
+                    StartCoroutine(ThrowSequence(-0.30f, true));
+                else
+                    StartCoroutine(ThrowSequence(0.0f, false));
             }
         }
 
         // Dropping the object in hand:
-        if(Input.GetKeyUp(cancelKey) && _handler.ObjectInHand != null)
+        if(Input.GetKeyUp(cancelKey) && handler.ObjectInHand != null)
         {
+            if(handler.RBOfObjectInHand.mass > 5)
+            {
+                bothHandsAnimator.SetFloat("PullbackSpeed", animationSpeed);
+                bothHandsAnimator.SetTrigger("Pullback");
+                bothHandsAnimator.SetFloat("ThrowSpeed", animationSpeed * 7.0f);
+                bothHandsAnimator.SetTrigger("Throw");
+            }
+            
             StartCoroutine(DropObject());
         }
     }
 
-    void PickUpObject(GameObject pickUp)
+    void PickUpObject(GameObject pickUp, bool bothHands)
     {
         // Setup references:
-        _handler.ObjectInHand = pickUp.transform.gameObject;
-        _objectLayer = _handler.ObjectInHand.layer;
-        _handler.ObjectInHand.layer = LayerMask.NameToLayer("InHand");
-        _handler.RBOfObjectInHand.isKinematic = true;
+        handler.ObjectInHand = pickUp.transform.gameObject;
+        objectLayer = handler.ObjectInHand.layer;
+        handler.ObjectInHand.layer = LayerMask.NameToLayer("InHand");
+        handler.RBOfObjectInHand.isKinematic = true;
+
+        if (bothHands)
+        {
+            float x = handler.RBOfObjectInHand.mass / (handler.RBOfObjectInHand.mass + 4.0f);
+            float y = handler.RBOfObjectInHand.mass / (handler.RBOfObjectInHand.mass + 6.0f);
+            animationSpeed = (x - y) * 5.0f;
+
+        }
+        else
+            animationSpeed = 0.1f;
+
+        Debug.Log(animationSpeed);
 
         // Set position and parent:
-        _handler.ObjectInHand.transform.position = handTransform.position + handPositionOffset;
-        _handler.ObjectInHand.transform.SetParent(handTransform);
-
+        if(bothHands)
+        {
+            handler.ObjectInHand.transform.SetParent(bothHandTransform);
+            handler.ObjectInHand.transform.localPosition = Vector3.zero + bothHandPositionOffset;
+            bothHandsAnimator.SetFloat("PickupSpeed", animationSpeed);
+            bothHandsAnimator.SetTrigger("PickUp");
+        }
+        else
+        {
+            handler.ObjectInHand.transform.SetParent(rightHandTransform);
+            handler.ObjectInHand.transform.localPosition = Vector3.zero + rightHandPositionOffset;
+            rightHandAnimator.SetTrigger("Swing");
+        }
     }
 
-    IEnumerator ThrowSequence()
+    IEnumerator ThrowSequence(float padding, bool bothHands)
     {
-        yield return new WaitForSecondsRealtime(_handler.RBOfObjectInHand.mass / waitInRealTimeDivider);
-
-        StartCoroutine(ThrowObject());
+        if (bothHands)
+        {
+            bothHandsAnimator.SetFloat("PullbackSpeed", animationSpeed);
+            bothHandsAnimator.SetTrigger("Pullback");
+            bothHandsAnimator.SetFloat("ThrowSpeed", animationSpeed * 7.0f);
+            bothHandsAnimator.SetTrigger("Throw");
+            yield return new WaitForSeconds(animationSpeed + padding);
+            StartCoroutine(ThrowObject());
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.1f + padding);
+            rightHandAnimator.SetTrigger("Swing");
+            StartCoroutine(ThrowObject());
+        }
     }
 
     IEnumerator ThrowObject()
     {
-        if (_handler.RBOfObjectInHand)
+        if (handler.RBOfObjectInHand)
         {
             // Deattach
-            _handler.RBOfObjectInHand.isKinematic = false;
-            _handler.ObjectInHand.transform.SetParent(null);
+            handler.RBOfObjectInHand.isKinematic = false;
+            handler.ObjectInHand.transform.SetParent(null);
 
             // Throw
-            _handler.RBOfObjectInHand.AddForce(((_handler.ModelTransform.forward * forwardForce) + (Vector3.up * upForce)) * _handler.RBOfObjectInHand.mass, ForceMode.Impulse);
-            _handler.HandAnimator.SetTrigger("Swing");
+            handler.RBOfObjectInHand.AddForce(((modelTransform.forward * forwardForce) + (Vector3.up * upForce)) * handler.RBOfObjectInHand.mass, ForceMode.Impulse);
 
             // Wait before turning the collider on
             yield return new WaitForSecondsRealtime(0.1f);
 
             // Enable collision with players
-            _handler.ObjectInHand.layer = _objectLayer;
+            handler.ObjectInHand.layer = objectLayer;
 
             // Deattach completely
-            _handler.ObjectInHand = null;
-            _handler.RBOfObjectInHand = null;
+            handler.ObjectInHand = null;
+            handler.RBOfObjectInHand = null;
 
             // Start cooldown
-            _justThrewObject = true;
+            justThrewObject = true;
             StartCoroutine(ThrowCooldown());
         }
     }
 
     IEnumerator DropObject()
     {
-        if (_handler.ObjectInHand)
+        if (handler.ObjectInHand)
         {
             // Deattach
-            _handler.RBOfObjectInHand.isKinematic = false;
-            _handler.ObjectInHand.transform.SetParent(null);
+            handler.RBOfObjectInHand.isKinematic = false;
+            handler.ObjectInHand.transform.SetParent(null);
 
             // Wait before turning the collider on
             yield return new WaitForSecondsRealtime(0.1f);
 
             // Enable collision with players
-            _handler.ObjectInHand.layer = _objectLayer;
+            handler.ObjectInHand.layer = objectLayer;
 
             // Deattach completely
-            _handler.ObjectInHand = null;
-            _handler.RBOfObjectInHand = null;
+            handler.ObjectInHand = null;
+            handler.RBOfObjectInHand = null;
         }
     }
 
     IEnumerator ThrowCooldown()
     {
         yield return new WaitForSecondsRealtime(coolDownTime);
-        _justThrewObject = false;
+        justThrewObject = false;
     }
 }

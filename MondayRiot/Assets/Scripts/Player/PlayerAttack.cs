@@ -19,7 +19,7 @@ public class PlayerAttack : MonoBehaviour
     {
        if(Input.GetKeyDown(attackKey))
        {
-            _handler.HandAnimator.SetTrigger("Swing");
+            _handler.RightHandAnimator.SetTrigger("Swing");
        }
     }
 }

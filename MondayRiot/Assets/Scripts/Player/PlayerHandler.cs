@@ -19,33 +19,36 @@ public class PlayerHandler : MonoBehaviour
 
     [Header("Model References")]
     [SerializeField]
-    private Transform _modelTransform;
+    private Transform modelTransform;
     [SerializeField]
-    private Rigidbody _modelRigidBody;
+    private Rigidbody modelRigidBody;
     [SerializeField]
-    private Animator _handAnimator;
+    private Animator rightHandAnimator;
+    [SerializeField]
+    private Animator bothHandAnimator;
 
     private XboxController assignedController = (XboxController)(-1);
 
-    private GameObject _gameObjectInHand;
-    private Rigidbody _rbOfGameObjectInHand;
+    private GameObject gameObjectInHand;
+    private Rigidbody rbOfGameObjectInHand;
+
 
     // Returns the transform of the player model.
     public Transform ModelTransform
     {
-        get { return _modelTransform; }
+        get { return modelTransform; }
     }
 
     // Returns the rigid body of the player model.
     public Rigidbody Rigidbody
     {
-        get { return _modelRigidBody; }
+        get { return modelRigidBody; }
     }
 
     // Returns the Xbox Controller assigned to the player.
     public XboxController AssignedController
     {
-        get { return assignedController;  }
+        get { return assignedController; }
         set { assignedController = value; }
     }
 
@@ -58,20 +61,26 @@ public class PlayerHandler : MonoBehaviour
     // Returns the game object the player is currently holding.
     public GameObject ObjectInHand
     {
-        get { return _gameObjectInHand; }
-        set { _gameObjectInHand = value; }
+        get { return gameObjectInHand; }
+        set { gameObjectInHand = value; }
     }
 
     // Returns the rigid body of the game object the player is currently holding.
     public Rigidbody RBOfObjectInHand
     {
-        get { return _rbOfGameObjectInHand; }
-        set { _rbOfGameObjectInHand = value; }
+        get { return rbOfGameObjectInHand; }
+        set { rbOfGameObjectInHand = value; }
     }
 
-    // Returns the hand animator:
-    public Animator HandAnimator
+    // Returns the right hand animator:
+    public Animator RightHandAnimator
     {
-        get { return _handAnimator; }
+        get { return rightHandAnimator; }
+    }
+
+    // Returns the animator of both hands:
+    public Animator BothHandsAnimator
+    {
+        get { return bothHandAnimator; }
     }
 }
