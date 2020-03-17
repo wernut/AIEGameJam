@@ -16,11 +16,9 @@ public class PlayerHandler : MonoBehaviour
 {
     [Header("Attributes")]
     public float totalHealth = 10.0f;
-    private float currentHealth = 10.0f;
     public float defaultMovementSpeed = 200.0f;
-    private float currentMovementSpeed = 200.0f;
     public float rotationSpeed = 300.0f;
-    private bool isDead = false;
+    public Transform spawnPoint;
 
     [Header("Keybinds")]
     public KeyCode interactObjectKey;
@@ -47,17 +45,34 @@ public class PlayerHandler : MonoBehaviour
     private GameObject arrow;
 
     private bool KBAM = false;
-    private int id = 0;
     private XboxController assignedController = (XboxController)(-1);
+    private bool isControllable = false;
+    private int id = 0;
+    private float currentHealth = 10.0f;
+    private float currentMovementSpeed = 0.0f;
+    private bool isDead = false;
     private EquippableObject equippedObject;
+    private float totalDamageDealt = 0.0f;
+    private PlayerThrow throwScript;
+
+    private void Awake()
+    {
+        throwScript = this.GetComponent<PlayerThrow>();
+        currentMovementSpeed = defaultMovementSpeed;
+    }
 
     private void Update()
     {
+        // Exiting the function if the player isn't controllable:
+        if (!isControllable)
+            return;
+
         // Check if alive:
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
             ModelTransform.gameObject.SetActive(false);
             currentHealth = totalHealth;
+            throwScript.Drop();
             isDead = true;
         }
 
@@ -143,9 +158,51 @@ public class PlayerHandler : MonoBehaviour
         set { currentMovementSpeed = value; }
     }
 
+    // Returns and sets if the player is controllable:
+    public bool IsControllable
+    {
+        get { return isControllable; }
+        set { isControllable = value; }
+    }
+
+    // Returns and sets if the player is dead:
+    public bool IsDead
+    {
+        get { return isDead; }
+        set { isDead = value; }
+    }
+
+    // Returns and sets how much damage the player has dealt:
+    public float TotalDamageDealt
+    {
+        get { return totalDamageDealt; }
+        set { totalDamageDealt = value; }
+    }
+
+    // Returns and sets the spawn point of the player:
+    public Transform SpawnPoint
+    {
+        get { return spawnPoint;  }
+    }
+
+    // Returns the player throw script attached to the player:
+    public PlayerThrow ThrowScript
+    {
+        get { return throwScript; }
+    }
+
     // Makes the player take damage:
     public void TakeDamage(float damage)
     {
         this.currentHealth -= damage;
+    }
+
+    // Respawns the player:
+    public void RespawnPlayer()
+    {
+        currentHealth = totalHealth;
+        isDead = false;
+        ModelTransform.gameObject.SetActive(true);
+        modelTransform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
     }
 }

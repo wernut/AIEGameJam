@@ -21,10 +21,18 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Debug Options")]
     public bool debugMode = false;
+
     public bool p1KeyboardAndMouse = true;
     public XboxController p1Controller;
-    public bool p2KeyboardAndMouse = true;
+
+    public bool p2KeyboardAndMouse = false;
     public XboxController p2Controller;
+
+    public bool p3KeyboardAndMouse = false;
+    public XboxController p3Controller;
+
+    public bool p4KeyboardAndMouse = false;
+    public XboxController p4Controller;
 
     private void Awake()
     {
@@ -43,27 +51,46 @@ public class PlayerManager : MonoBehaviour
         {
             players[i].gameObject.SetActive(true);
             players[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
+            players[i].ID = i + 1;
 
             if (!playerInputInfo.GetInputInfo(i).KBAM)
             {
                 players[i].AssignedController = playerInputInfo.GetInputInfo(i).assignedController;
             }
 
-            players[i].ID = i + 1;
         }
     }
 
     void SetupViaDebugControls()
     {
-        players[0].gameObject.SetActive(true);
-        players[0].ModelTransform.SetPositionAndRotation(spawnPoints[0].position, spawnPoints[0].rotation);
-        if (!p1KeyboardAndMouse)
-            players[0].AssignedController = p1Controller;
+        for(int i = 0; i < 4; ++i)
+        {
+            players[i].gameObject.SetActive(true);
+            players[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
+            players[i].ID = i + 1;
 
-        players[1].gameObject.SetActive(true);
-        players[1].ModelTransform.SetPositionAndRotation(spawnPoints[1].position, spawnPoints[1].rotation);
-        if(!p2KeyboardAndMouse)
-            players[1].AssignedController = p2Controller;
+            switch (i)
+            {
+                case 0:
+                    if (!p1KeyboardAndMouse)
+                        players[i].AssignedController = p1Controller;
+                    break;
 
+                case 1:
+                    if (!p2KeyboardAndMouse)
+                        players[i].AssignedController = p2Controller;
+                    break;
+
+                case 2:
+                    if (!p3KeyboardAndMouse)
+                        players[i].AssignedController = p3Controller;
+                    break;
+
+                case 3:
+                    if (!p4KeyboardAndMouse)
+                        players[i].AssignedController = p4Controller;
+                    break;
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@ public class PTCAssigner : MonoBehaviour
 {
     public PlayerInputInformation playerInputInfo;
     public PlayerInputLayout playerInputLayout;
+    public string nameOfSceneToLoad;
     private int connectedControllers = 0;
     private List<XboxController> unassignedControllers = new List<XboxController>();
     private List<XboxController> assignedControllers = new List<XboxController>();
@@ -91,7 +92,7 @@ public class PTCAssigner : MonoBehaviour
         {
             if(Input.GetKeyUp(KeyCode.Return) || XCI.GetButtonUp(XboxButton.Start, XboxController.All))
             {
-                SceneManager.LoadScene("LW - Test Scene");
+                SceneManager.LoadScene(nameOfSceneToLoad);
             }
         }
     }

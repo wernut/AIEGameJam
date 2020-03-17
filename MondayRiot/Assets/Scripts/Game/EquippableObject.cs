@@ -13,6 +13,7 @@ public class EquippableObject : MonoBehaviour
     public Vector3 bothHandOffset;
     public bool wasJustThrown;
     public bool wasJustSwung;
+    private int currentDurablility = 0;
 
     // Handler of the player who through the object.
     private PlayerHandler handler;
@@ -21,18 +22,13 @@ public class EquippableObject : MonoBehaviour
     private void Awake()
     {
         rigidbody = this.GetComponent<Rigidbody>();
+        currentDurablility = durablility;
     }
 
-    public Rigidbody Rigidbody
-    {
-        get { return rigidbody; }
-    }
-
-    public void Thrown(PlayerHandler handler, LayerMask defaultLayer)
+    public void Setup(PlayerHandler handler, LayerMask defaultLayer)
     {
         this.handler = handler;
         this.defaultLayer = defaultLayer;
-        wasJustThrown = true;
     }
 
     public void OnCollisionEnter(Collision collision)
@@ -43,14 +39,27 @@ public class EquippableObject : MonoBehaviour
             if (victim != null)
             {
                 victim.TakeDamage(damage);
-                Debug.Log(victim.ID + " - " + damage);
+                handler.TotalDamageDealt += damage;
+                Debug.Log("Player" + handler.ID + " just dealt " + damage + " damage to Player" + victim.ID);
             }
+
             if(wasJustThrown)
             {
+                currentDurablility -= 1;
+                if(currentDurablility <= 0)
+                {
+                    this.gameObject.SetActive(false);
+                    currentDurablility = durablility;
+                }
                 this.transform.gameObject.layer = defaultLayer;
                 wasJustThrown = false;
             }
             wasJustSwung = false;
         }
+    }
+
+    public Rigidbody Rigidbody
+    {
+        get { return rigidbody; }
     }
 }

@@ -1,46 +1,157 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    public enum GameState
+    {
+        START,
+        PLAYING,
+        BETWEEN_ROUNDS,
+        END,
+        COUNT
+    }
+
+    [Header("Script References")]
     public PlayerManager playerManager;
+    public StorePosAndRot storePosAndRot;
+
+    [Header("UI References")]
+    public List<GameObject> gamestatePanels = new List<GameObject>();
+    public List<TextMeshProUGUI> timerText = new List<TextMeshProUGUI>();
+
+    [Header("Attributes")]
     public int amountOfRounds = 3;
+    public float timeBeforeGameStarts = 5.0f;
     public float roundTimeInSeconds = 90.0f;
     public float timeBetweenRounds = 5.0f;
+
+    // Timers and state:
+    private float beforeGameTimer = 0.0f;
     private float roundTimer = 0.0f;
     private float betweenRoundTimer = 0.0f;
-    private bool isRoundPlaying = false;
-    private bool gameOver = false;
-    private bool inbetweenRounds = false;
+    private GameState currentState;
+    private bool hasReset = false;
 
     private void Start()
     {
+        currentState = GameState.START;
         ResetTimers();
     }
 
     private void Update()
     {
-        if (!gameOver && roundTimer > 0)
+        switch(currentState)
         {
-            if (inbetweenRounds)
-            {
-                if (betweenRoundTimer > 0)
-                    betweenRoundTimer -= Time.deltaTime;
+            case GameState.START:
+                if (beforeGameTimer > 0.0f)
+                {
+                    beforeGameTimer -= Time.deltaTime;
+                    UpdatePanelTimer(GameState.START, beforeGameTimer);
+                }
                 else
                 {
-                    inbetweenRounds = true;
-                    betweenRoundTimer = timeBetweenRounds;
+                    hasReset = false;
+                    beforeGameTimer = timeBeforeGameStarts;
+                    UpdateState(GameState.PLAYING);
+                    SetAllPlayersControllable(true);
                 }
-            }
-            else
-                roundTimer -= Time.deltaTime;
+                break;
+
+            case GameState.PLAYING:
+                if (roundTimer > 0.0f)
+                {
+                    roundTimer -= Time.deltaTime;
+                    UpdatePanelTimer(GameState.PLAYING, roundTimer);
+                }
+                else
+                {
+                    roundTimer = roundTimeInSeconds;
+                    UpdateState(GameState.BETWEEN_ROUNDS);
+                    SetAllPlayersControllable(false);
+                }
+                break;
+
+            case GameState.BETWEEN_ROUNDS:
+
+                if(amountOfRounds == 0)
+                {
+                    UpdateState(GameState.END);
+                    return;
+                }
+
+                if (betweenRoundTimer > 0)
+                {
+                    betweenRoundTimer -= Time.deltaTime;
+                    UpdatePanelTimer(GameState.BETWEEN_ROUNDS, betweenRoundTimer);
+                }
+                else
+                {
+                    betweenRoundTimer = timeBetweenRounds;
+                    --amountOfRounds;
+                    AllPlayersDropObject();
+                    storePosAndRot.ResetAllObjects();
+                    RespawnAllPlayers();
+                    SetAllPlayersControllable(true);
+                    UpdateState(GameState.PLAYING);
+                }
+                break;
+
+            case GameState.END:
+                if(!hasReset)
+                {
+                    AllPlayersDropObject();
+                    storePosAndRot.ResetAllObjects();
+                    ResetTimers();
+                    SetAllPlayersControllable(false);
+                    hasReset = true;
+                }
+                break;
         }
+    }
+
+    void UpdatePanelTimer(GameState state, float time)
+    {
+        gamestatePanels[(int)state].SetActive(true);
+
+        if (time > 60)
+            timerText[(int)state].text = (time / 60).ToString("0.00") + " mins";
         else
+            timerText[(int)state].text = time.ToString("0.00") + " secs";
+    }
+
+    void UpdateState(GameState nextState)
+    {
+        gamestatePanels[(int)currentState].SetActive(false);
+        currentState = nextState;
+        gamestatePanels[(int)currentState].SetActive(true);
+    }
+
+    void RespawnAllPlayers()
+    {
+        for (int i = 0; i < playerManager.players.Count; ++i)
         {
-            --amountOfRounds;
-            roundTimer = roundTimeInSeconds;
-            inbetweenRounds = true;
+            playerManager.players[i].RespawnPlayer();
+        }
+    }
+
+    void AllPlayersDropObject()
+    {
+        /* dupes item when round is over! doesnt get rid of it */
+
+        for (int i = 0; i < playerManager.players.Count; ++i)
+        {
+            playerManager.players[i].ThrowScript.InstantDrop();
+        }
+    }
+
+    void SetAllPlayersControllable(bool value)
+    {
+        for (int i = 0; i < playerManager.players.Count; ++i)
+        {
+            playerManager.players[i].IsControllable = value;
         }
     }
 
@@ -48,5 +159,12 @@ public class GameManager : MonoBehaviour
     {
         roundTimer = roundTimeInSeconds;
         betweenRoundTimer = timeBetweenRounds;
+        beforeGameTimer = timeBeforeGameStarts;
+    }
+
+    public GameState CurrentState
+    {
+        get { return currentState;  }
+        set { currentState = value; }
     }
 }

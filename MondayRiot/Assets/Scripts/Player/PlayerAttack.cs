@@ -27,6 +27,10 @@ public class PlayerAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Exiting the function if the player isn't controllable:
+        if (!handler.IsControllable || handler.IsDead)
+            return;
+
         if (handler.HasAssignedController())
         {
             if (XCI.GetButtonDown(handler.meleeAttackButton, handler.AssignedController))

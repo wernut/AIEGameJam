@@ -622,6 +622,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInputInfo: {fileID: 1986204285}
   playerInputLayout: {fileID: 1041760523}
+  nameOfSceneToLoad: MainScene
 --- !u!4 &617666536
 Transform:
   m_ObjectHideFlags: 0

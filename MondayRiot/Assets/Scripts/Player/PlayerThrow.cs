@@ -12,7 +12,7 @@ public class PlayerThrow : MonoBehaviour
     private Transform modelTransform;
     private LayerMask objectLayer;
     private bool justThrewObject = false;
-    private float animationSpeed = 0.0f;
+    private Transform originParent;
 
     [Header("Attributes")]
     public float forwardForce = 10.0f;
@@ -44,7 +44,11 @@ public class PlayerThrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(handler.HasAssignedController())
+        // Exiting the function if the player isn't controllable:
+        if (!handler.IsControllable || handler.IsDead)
+            return;
+
+        if (handler.HasAssignedController())
         {
             // Xbox controller input:
             if(XCI.GetButtonUp(handler.interactObjectButton, handler.AssignedController))
@@ -98,13 +102,13 @@ public class PlayerThrow : MonoBehaviour
         else
         {
             if (handler.EquippedObject.useBothHands)
-                StartCoroutine(ThrowSequence(0.0f, true));
+                StartCoroutine(ThrowSequence(true));
             else
-                StartCoroutine(ThrowSequence(0.0f, false));
+                StartCoroutine(ThrowSequence(false));
         }
     }
 
-    void Drop()
+    public void Drop()
     {
         if (handler.EquippedObject != null && handler.EquippedObject.useBothHands)
             bothHandsAnimator.SetTrigger("Drop");
@@ -116,29 +120,25 @@ public class PlayerThrow : MonoBehaviour
     {
         // Setup references:
         objectLayer = pickUp.transform.gameObject.layer;
-        pickUp.transform.gameObject.layer = LayerMask.NameToLayer("Player" + handler.ID + "Weapon");
+        LayerMask layerMask = LayerMask.NameToLayer("Player" + handler.ID + "Weapon");
+        pickUp.transform.gameObject.layer = layerMask;
+        originParent = pickUp.transform.parent;
         pickUp.Rigidbody.isKinematic = true;
         handler.EquippedObject = pickUp;
 
-        // Get the animation speed via the object's mass:
+        // Setting up the equipped object:
+        handler.EquippedObject.Setup(handler, objectLayer);
+
         if (bothHands)
         {
-            float x = handler.EquippedObject.Rigidbody.mass / (handler.EquippedObject.Rigidbody.mass + 4.0f);
-            float y = handler.EquippedObject.Rigidbody.mass / (handler.EquippedObject.Rigidbody.mass + 6.0f);
-            animationSpeed = (x - y) * 5.0f;
-
+            // If requires both hands, slow the movement down via the objects mass:
             handler.CurrentSpeed = handler.defaultMovementSpeed / (handler.EquippedObject.Rigidbody.mass * 0.15f);
-        }
-        else
-            animationSpeed = 0.1f;
 
-        // Set position and parent:
-        if(bothHands)
-        {
+            // Set position and parent:
             handler.EquippedObject.transform.SetParent(bothHandTransform);
             handler.EquippedObject.transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
             handler.EquippedObject.transform.localPosition = Vector3.zero + handler.EquippedObject.bothHandOffset;
-            bothHandsAnimator.SetFloat("PickupSpeed", animationSpeed);
+            handler.EquippedObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             bothHandsAnimator.SetTrigger("PickUp");
         }
         else
@@ -149,19 +149,18 @@ public class PlayerThrow : MonoBehaviour
         }
     }
 
-    IEnumerator ThrowSequence(float padding, bool bothHands)
+    IEnumerator ThrowSequence(bool bothHands)
     {
         if (bothHands)
         {
-            bothHandsAnimator.SetFloat("ThrowSpeed", 1.0f);
             bothHandsAnimator.SetTrigger("Throw");
-            yield return new WaitForSecondsRealtime(0.6f);
+            yield return new WaitForSecondsRealtime(0.5f);
             StartCoroutine(ThrowObject());
         }
         else
         {
-            yield return new WaitForSecondsRealtime(0.1f + padding);
             rightHandAnimator.SetTrigger("Swing");
+            yield return new WaitForSecondsRealtime(0.1f);
             StartCoroutine(ThrowObject());
         }
     }
@@ -172,7 +171,7 @@ public class PlayerThrow : MonoBehaviour
         {
             // Deattach
             handler.EquippedObject.Rigidbody.isKinematic = false;
-            handler.EquippedObject.transform.SetParent(null);
+            handler.EquippedObject.transform.SetParent(originParent);
 
             // Throw
             handler.EquippedObject.Rigidbody.AddForce(((modelTransform.forward * forwardForce) + (Vector3.up * upForce)) * handler.EquippedObject.Rigidbody.mass, ForceMode.Impulse);
@@ -183,8 +182,7 @@ public class PlayerThrow : MonoBehaviour
             // Wait before turning the collider on
             yield return new WaitForSecondsRealtime(0.1f);
 
-            // Calling the thrown function in the object class:
-            handler.EquippedObject.Thrown(handler, objectLayer);
+            handler.EquippedObject.wasJustThrown = true;
 
             // Deattach completely
             handler.EquippedObject = null;
@@ -201,10 +199,29 @@ public class PlayerThrow : MonoBehaviour
         {
             // Deattach
             handler.EquippedObject.Rigidbody.isKinematic = false;
-            handler.EquippedObject.transform.SetParent(null);
+            handler.EquippedObject.transform.SetParent(originParent);
 
             // Wait before turning the collider on
             yield return new WaitForSecondsRealtime(0.1f);
+
+            // Enable collision with players
+            handler.EquippedObject.transform.gameObject.layer = objectLayer;
+
+            // Deattach completely
+            handler.EquippedObject = null;
+            handler.CurrentSpeed = handler.defaultMovementSpeed;
+        }
+    }
+
+    public void InstantDrop()
+    {
+        if (handler.EquippedObject)
+        {
+            bothHandsAnimator.SetTrigger("Drop");
+
+            // Deattach
+            handler.EquippedObject.Rigidbody.isKinematic = false;
+            handler.EquippedObject.transform.SetParent(originParent);
 
             // Enable collision with players
             handler.EquippedObject.transform.gameObject.layer = objectLayer;
