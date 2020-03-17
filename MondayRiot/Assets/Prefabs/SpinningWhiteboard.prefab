@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4797546384036723508}
   - component: {fileID: 112155003667941575}
   - component: {fileID: 112155003667941574}
-  - component: {fileID: 3600913481041032437}
+  - component: {fileID: 1516539259596125619}
   m_Layer: 0
   m_Name: whiteboard
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 850228277453889716}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 1.27, z: 0}
+  m_LocalPosition: {x: -0, y: 1.65, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4968808148044219621}
@@ -60,7 +60,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 8e10064e1c6ef074cbfab2be451dbef3, type: 2}
+  - {fileID: 2100000, guid: 9fbdccd0698ca024289460650f727a1a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -108,7 +109,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 1.27, z: 0}
+  m_ConnectedAnchor: {x: 0, y: 1.65, z: 0}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -132,7 +133,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!65 &3600913481041032437
+--- !u!65 &1516539259596125619
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +144,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.6, y: 1, z: 0.07105741}
+  m_Size: {x: 2.08, y: 1.3, z: 0.09237463}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8263992580357289718
 GameObject:
@@ -172,7 +173,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8263992580357289718}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.94059, y: 0, z: 4.0229387}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -205,7 +206,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: df042a23489202341b151fc96ac57dbc, type: 2}
+  - {fileID: 2100000, guid: 44b1a0485e85c104a93896bc5fc331fd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
