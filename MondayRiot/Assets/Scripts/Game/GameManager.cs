@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -24,6 +25,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI timerHeader;
     public List<string> timerHeaderStrings = new List<string>(3);
+    public Image timerFill;
 
     [Header("Attributes")]
     public int amountOfRounds = 3;
@@ -117,6 +119,13 @@ public class GameManager : MonoBehaviour
 
     void UpdatePanelTimer(GameState state, float time)
     {
+        float maxtime =
+            state == GameState.PLAYING ? roundTimeInSeconds :
+            state == GameState.BETWEEN_ROUNDS ? timeBetweenRounds :
+            state == GameState.START ? timeBeforeGameStarts :
+            time;
+
+        timerFill.fillAmount = time / maxtime;
         if (time < 10f)
         {
             timerText.fontSize = 40f;
