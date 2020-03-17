@@ -46,18 +46,19 @@ public class PlayerAttack : MonoBehaviour
 
     void TriggerAnimation()
     {
+        handler.EquippedObject.wasJustSwung = true;
+
+
         if (handler.EquippedObject == null)
         {
             handler.RightHandAnimator.SetTrigger("Swing");
         }
         else if (!handler.EquippedObject.useBothHands)
         {
-            handler.EquippedObject.wasJustSwung = true;
             handler.RightHandAnimator.SetTrigger("Swing");
         }
         else
         {
-            handler.EquippedObject.wasJustSwung = true;
             handler.BothHandsAnimator.SetTrigger("Swing");
             StartCoroutine(SwingTimer());
         }
@@ -65,7 +66,7 @@ public class PlayerAttack : MonoBehaviour
 
     IEnumerator SwingTimer()
     {
-        yield return new WaitForSecondsRealtime(1.0f);
+        yield return new WaitForSecondsRealtime(0.5f);
         handler.EquippedObject.wasJustSwung = false;
     }
 }
