@@ -942,10 +942,12 @@ MonoBehaviour:
   - {fileID: 8397618100355457853}
   - {fileID: 8397618099368002293}
   - {fileID: 8397618098520996769}
-  timerText:
-  - {fileID: 8397618099160170763}
-  - {fileID: 8397618099411296389}
-  - {fileID: 8397618098495426407}
+  timerText: {fileID: 0}
+  timerHeader: {fileID: 0}
+  timerHeaderStrings:
+  - 'Game starts in:'
+  - 'Time left in round:'
+  - 'Time until next round:'
   amountOfRounds: 3
   timeBeforeGameStarts: 3
   roundTimeInSeconds: 90

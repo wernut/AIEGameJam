@@ -20,7 +20,10 @@ public class GameManager : MonoBehaviour
 
     [Header("UI References")]
     public List<GameObject> gamestatePanels = new List<GameObject>();
-    public List<TextMeshProUGUI> timerText = new List<TextMeshProUGUI>();
+    //public List<TextMeshProUGUI> timerText = new List<TextMeshProUGUI>();
+    public TextMeshProUGUI timerText;
+    public TextMeshProUGUI timerHeader;
+    public List<string> timerHeaderStrings = new List<string>(3);
 
     [Header("Attributes")]
     public int amountOfRounds = 3;
@@ -114,19 +117,35 @@ public class GameManager : MonoBehaviour
 
     void UpdatePanelTimer(GameState state, float time)
     {
-        gamestatePanels[(int)state].SetActive(true);
-
-        if (time > 60)
-            timerText[(int)state].text = (time / 60).ToString("0.00") + " mins";
+        if (time < 10f)
+        {
+            timerText.fontSize = 40f;
+            timerText.text = time.ToString("0.00");
+        }
         else
-            timerText[(int)state].text = time.ToString("0.00") + " secs";
+        {
+            timerText.fontSize = 60f;
+            timerText.text = time.ToString("0");
+        }
+
+        timerHeader.text = timerHeaderStrings[(int)state];
+
+        //gamestatePanels[(int)state].SetActive(true);
+
+        //if (time > 60)
+        //    timerText[(int)state].text = (time / 60).ToString("0.00") + " mins";
+        //else
+        //    timerText[(int)state].text = time.ToString("0.00") + " secs";
     }
 
     void UpdateState(GameState nextState)
     {
-        gamestatePanels[(int)currentState].SetActive(false);
+        //gamestatePanels[(int)currentState].SetActive(false);
         currentState = nextState;
-        gamestatePanels[(int)currentState].SetActive(true);
+        if (nextState == GameState.END)
+        {
+            gamestatePanels[(int)currentState].SetActive(true);
+        }
     }
 
     void RespawnAllPlayers()
