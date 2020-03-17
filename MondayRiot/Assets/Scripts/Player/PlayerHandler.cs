@@ -10,12 +10,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using XboxCtrlrInput;
 
 public class PlayerHandler : MonoBehaviour
 {
     [Header("Attributes")]
-    public float totalHealth = 10.0f;
+    public float totalHealth = 100.0f;
     public float defaultMovementSpeed = 200.0f;
     public float rotationSpeed = 300.0f;
     public Transform spawnPoint;
@@ -44,11 +46,15 @@ public class PlayerHandler : MonoBehaviour
     [SerializeField]
     private GameObject arrow;
 
+    [Header("UI References")]
+    public Image heartFillImage;
+    public TextMeshProUGUI heartText;
+
     private bool KBAM = false;
     private XboxController assignedController = (XboxController)(-1);
     private bool isControllable = false;
     private int id = 0;
-    private float currentHealth = 10.0f;
+    private float currentHealth = 0.0f;
     private float currentMovementSpeed = 0.0f;
     private bool isDead = false;
     private InteractableObject equippedObject;
@@ -59,6 +65,8 @@ public class PlayerHandler : MonoBehaviour
     {
         throwScript = this.GetComponent<PlayerThrow>();
         currentMovementSpeed = defaultMovementSpeed;
+        currentHealth = totalHealth;
+        UpdateHeartUI();
     }
 
     private void Update()
@@ -70,10 +78,10 @@ public class PlayerHandler : MonoBehaviour
         // Check if alive:
         if (currentHealth <= 0)
         {
+            isDead = true;
+            throwScript.InstantDrop();
             ModelTransform.gameObject.SetActive(false);
             currentHealth = totalHealth;
-            throwScript.Drop();
-            isDead = true;
         }
 
         // Check if arrow should show:
@@ -194,15 +202,24 @@ public class PlayerHandler : MonoBehaviour
     // Makes the player take damage:
     public void TakeDamage(float damage)
     {
-        this.currentHealth -= damage;
+        currentHealth -= damage;
+        UpdateHeartUI();
+    }
+
+    // Updates the heart UI for the player:
+    public void UpdateHeartUI()
+    {
+        heartText.text = currentHealth.ToString();
+        heartFillImage.fillAmount = currentHealth / totalHealth;
     }
 
     // Respawns the player:
     public void RespawnPlayer()
     {
         currentHealth = totalHealth;
-        isDead = false;
+        UpdateHeartUI();
         ModelTransform.gameObject.SetActive(true);
         modelTransform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
+        isDead = false;
     }
 }

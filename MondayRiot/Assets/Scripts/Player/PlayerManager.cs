@@ -19,20 +19,13 @@ public class PlayerManager : MonoBehaviour
     public List<Material> playerMaterials = new List<Material>();
     private PlayerInputInformation playerInputInfo;
 
-    [Header("Debug Options")]
+    [Header("Debug")]
     public bool debugMode = false;
 
-    public bool p1KeyboardAndMouse = true;
-    public XboxController p1Controller;
+    public List<bool> shouldPlayerUseKBAM = new List<bool>();
+    public List<bool> isPlayerActive = new List<bool>();
+    public List<XboxController> xboxControllers = new List<XboxController>();
 
-    public bool p2KeyboardAndMouse = false;
-    public XboxController p2Controller;
-
-    public bool p3KeyboardAndMouse = false;
-    public XboxController p3Controller;
-
-    public bool p4KeyboardAndMouse = false;
-    public XboxController p4Controller;
 
     private void Awake()
     {
@@ -69,28 +62,11 @@ public class PlayerManager : MonoBehaviour
             players[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
             players[i].ID = i + 1;
 
-            switch (i)
-            {
-                case 0:
-                    if (!p1KeyboardAndMouse)
-                        players[i].AssignedController = p1Controller;
-                    break;
+            if (!isPlayerActive[i])
+                players[i].IsDead = true;
 
-                case 1:
-                    if (!p2KeyboardAndMouse)
-                        players[i].AssignedController = p2Controller;
-                    break;
-
-                case 2:
-                    if (!p3KeyboardAndMouse)
-                        players[i].AssignedController = p3Controller;
-                    break;
-
-                case 3:
-                    if (!p4KeyboardAndMouse)
-                        players[i].AssignedController = p4Controller;
-                    break;
-            }
+            if (!shouldPlayerUseKBAM[i])
+                players[i].AssignedController = xboxControllers[i];
         }
     }
 }

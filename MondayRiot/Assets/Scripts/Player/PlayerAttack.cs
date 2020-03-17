@@ -16,9 +16,6 @@ public class PlayerAttack : MonoBehaviour
 {
     private PlayerHandler handler;
 
-    [Header("Attributes")]
-    public KeyCode attackKey;
-
     private void Awake()
     {
         handler = this.GetComponent<PlayerHandler>();
