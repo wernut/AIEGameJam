@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StorePosAndRot : MonoBehaviour
+public class RestoreProps : MonoBehaviour
 {
     private List<Vector3> originPos = new List<Vector3>();
     private List<Quaternion> originRot = new List<Quaternion>();
@@ -18,7 +18,7 @@ public class StorePosAndRot : MonoBehaviour
         }
     }
 
-    public void ResetAllObjects()
+    public void RestoreAll()
     {
         for(int i = 0; i < throwables.Count; ++i)
         {

@@ -87,7 +87,7 @@ public class PlayerThrow : MonoBehaviour
                     continue;
 
                 // Picking up the first found equippable object:
-                handler.EquippedObject = objects[i].transform.gameObject.GetComponent<EquippableObject>();
+                handler.EquippedObject = objects[i].transform.gameObject.GetComponent<InteractableObject>();
                 if (handler.EquippedObject != null)
                 {
                     if (handler.EquippedObject.useBothHands)
@@ -116,7 +116,7 @@ public class PlayerThrow : MonoBehaviour
         StartCoroutine(DropObject());
     }
 
-    void PickUpObject(EquippableObject pickUp, bool bothHands)
+    void PickUpObject(InteractableObject pickUp, bool bothHands)
     {
         // Setup references:
         objectLayer = pickUp.transform.gameObject.layer;

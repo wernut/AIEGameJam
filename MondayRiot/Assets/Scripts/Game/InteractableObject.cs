@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EquippableObject : MonoBehaviour
+public class InteractableObject : MonoBehaviour
 {
     private Rigidbody rigidbody;
 

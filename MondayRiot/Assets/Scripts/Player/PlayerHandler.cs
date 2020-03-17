@@ -51,7 +51,7 @@ public class PlayerHandler : MonoBehaviour
     private float currentHealth = 10.0f;
     private float currentMovementSpeed = 0.0f;
     private bool isDead = false;
-    private EquippableObject equippedObject;
+    private InteractableObject equippedObject;
     private float totalDamageDealt = 0.0f;
     private PlayerThrow throwScript;
 
@@ -113,7 +113,7 @@ public class PlayerHandler : MonoBehaviour
     }
 
     // Returns and sets the equippable object the player is currently holding.
-    public EquippableObject EquippedObject
+    public InteractableObject EquippedObject
     {
         get { return equippedObject; }
         set { equippedObject = value; }

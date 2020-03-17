@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Script References")]
     public PlayerManager playerManager;
-    public StorePosAndRot storePosAndRot;
+    public RestoreProps restoreProps;
 
     [Header("UI References")]
     public List<GameObject> gamestatePanels = new List<GameObject>();
@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour
                     betweenRoundTimer = timeBetweenRounds;
                     --amountOfRounds;
                     AllPlayersDropObject();
-                    storePosAndRot.ResetAllObjects();
+                    restoreProps.RestoreAll();
                     RespawnAllPlayers();
                     SetAllPlayersControllable(true);
                     UpdateState(GameState.PLAYING);
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
                 if(!hasReset)
                 {
                     AllPlayersDropObject();
-                    storePosAndRot.ResetAllObjects();
+                    restoreProps.RestoreAll();
                     ResetTimers();
                     SetAllPlayersControllable(false);
                     hasReset = true;
