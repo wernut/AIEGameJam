@@ -1,25 +1,70 @@
-﻿using System.Collections;
+﻿/*=============================================================================
+ * Game:        Monday Riot
+ * Version:     Alpha
+ * 
+ * Class:       PlayerMovement.cs
+ * Purpose:     Used to attack other players
+ * 
+ * Author:      Lachlan Wernert
+ *===========================================================================*/
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XboxCtrlrInput;
 
 public class PlayerAttack : MonoBehaviour
 {
-    private PlayerHandler _handler;
+    private PlayerHandler handler;
 
     [Header("Attributes")]
     public KeyCode attackKey;
 
     private void Awake()
     {
-        _handler = this.GetComponent<PlayerHandler>();
+        handler = this.GetComponent<PlayerHandler>();
     }
 
     // Update is called once per frame
     void Update()
     {
-       if(Input.GetKeyDown(attackKey))
-       {
-            _handler.RightHandAnimator.SetTrigger("Swing");
-       }
+        if (handler.HasAssignedController())
+        {
+            if (XCI.GetButtonDown(handler.meleeAttackButton, handler.AssignedController))
+            {
+                TriggerAnimation();
+            }
+        }
+        else
+        {
+            if(Input.GetKeyDown(handler.meleeAttackKey))
+            {
+                TriggerAnimation();
+            }
+        }
+    }
+
+    void TriggerAnimation()
+    {
+        if (handler.EquippedObject == null)
+        {
+            handler.RightHandAnimator.SetTrigger("Swing");
+        }
+        else if (!handler.EquippedObject.useBothHands)
+        {
+            handler.EquippedObject.wasJustSwung = true;
+            handler.RightHandAnimator.SetTrigger("Swing");
+        }
+        else
+        {
+            handler.EquippedObject.wasJustSwung = true;
+            handler.BothHandsAnimator.SetTrigger("Swing");
+            StartCoroutine(SwingTimer());
+        }
+    }
+
+    IEnumerator SwingTimer()
+    {
+        yield return new WaitForSecondsRealtime(1.0f);
+        handler.EquippedObject.wasJustSwung = false;
     }
 }

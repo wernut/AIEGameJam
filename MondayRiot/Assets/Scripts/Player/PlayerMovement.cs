@@ -18,11 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerHandler handler;
     private Transform modelTransform;
     private Rigidbody rigidBody;
-
-    [Header("Attributes")]
-    public float speed = 50.0f;
-    public float rotationSpeed = 10.0f;
-    private float _vAxis, _hAxis, _hRotAxis;
+    private float vAxis, hAxis, hRotAxis;
 
     private void Awake()
     {
@@ -38,25 +34,26 @@ public class PlayerMovement : MonoBehaviour
         if(handler.HasAssignedController())
         {
             // Obtaining axis values from xbox controller:
-            _vAxis    = XCI.GetAxis(XboxAxis.LeftStickX,  handler.AssignedController);
-            _hAxis    = XCI.GetAxis(XboxAxis.LeftStickY,  handler.AssignedController);
-            _hRotAxis = XCI.GetAxis(XboxAxis.RightStickX, handler.AssignedController);
+            vAxis    = XCI.GetAxis(XboxAxis.LeftStickY,  handler.AssignedController);
+            hAxis    = XCI.GetAxis(XboxAxis.LeftStickX,  handler.AssignedController);
+            hRotAxis = XCI.GetAxis(XboxAxis.RightStickX, handler.AssignedController);
         }
         else
         {
             // Obtaining axis values from unity input system:
-            _vAxis    = Input.GetAxis("Vertical");
-            _hAxis    = Input.GetAxis("Horizontal");
-            _hRotAxis = Input.GetAxis("A_Horizontal");
+            vAxis    = Input.GetAxis("Vertical");
+            hAxis    = Input.GetAxis("Horizontal");
+            hRotAxis = Input.GetAxis("A_Horizontal");
         }
 
         // Calculating total movement based on both vectors:
-        Vector3 totalMovement = ((Vector3.forward * _vAxis) + (Vector3.right * _hAxis)) * speed * Time.fixedDeltaTime;
+        Vector3 totalMovement = ((Vector3.forward * vAxis) + (Vector3.right * hAxis)) * handler.CurrentSpeed * Time.fixedDeltaTime;
 
         // Calcuating rigidbody velocity based on both axis:
-        rigidBody.velocity = totalMovement;
+        if(totalMovement.magnitude > 0)
+            rigidBody.velocity = totalMovement;
 
         // Calculating the transforms rotation based on the rotation axis:
-        modelTransform.Rotate((modelTransform.up * _hRotAxis) * rotationSpeed * Time.fixedDeltaTime);
+        modelTransform.Rotate((modelTransform.up * hRotAxis) * handler.rotationSpeed * Time.fixedDeltaTime);
     }
 }
