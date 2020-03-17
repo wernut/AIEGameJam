@@ -465,9 +465,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009b190f9f286f8489c6c9911fd844dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalHealth: 10
+  totalHealth: 100
   defaultMovementSpeed: 200
   rotationSpeed: 300
+  spawnPoint: {fileID: 0}
   interactObjectKey: 101
   dropObjectKey: 113
   meleeAttackKey: 32

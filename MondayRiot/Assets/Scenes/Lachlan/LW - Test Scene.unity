@@ -196,13 +196,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 40725154}
-  m_LocalRotation: {x: 0.42260817, y: 0.006256029, z: -0.002917234, w: 0.9062862}
-  m_LocalPosition: {x: 1.49, y: 8.42, z: -4.77}
+  m_LocalRotation: {x: 0.4999881, y: 0.0059779696, z: -0.0034513823, w: 0.8660048}
+  m_LocalPosition: {x: 1.49, y: 8.42, z: -5.77}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 50, y: 0.791, z: 0}
+  m_LocalEulerAnglesHint: {x: 60, y: 0.791, z: 0}
 --- !u!1001 &113047407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -546,7 +546,7 @@ GameObject:
   - component: {fileID: 854026640}
   - component: {fileID: 854026641}
   m_Layer: 0
-  m_Name: Equippables
+  m_Name: Interactables
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1264,11 +1264,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8397618099035930095, guid: 6700e5495f1957a47adc29a55ffdfb0f,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 40725156}
     - target: {fileID: 8397618099399105003, guid: 6700e5495f1957a47adc29a55ffdfb0f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1324,11 +1319,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8397618099399105004, guid: 6700e5495f1957a47adc29a55ffdfb0f,
-        type: 3}
-      propertyPath: storePosAndRot
-      value: 
-      objectReference: {fileID: 854026641}
     - target: {fileID: 8397618099399105005, guid: 6700e5495f1957a47adc29a55ffdfb0f,
         type: 3}
       propertyPath: m_Name
