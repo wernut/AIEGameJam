@@ -19,7 +19,8 @@ public class PlayerInputLayout : MonoBehaviour
     public Sprite keyboardSprite;
     public Sprite unnasignedSprite;
     public List<Image> layoutSprites = new List<Image>();
-    public PlayerInputInformation playerInputInformation;
+    public PTCAssigner ptcAssigner;
+    private PlayerInputInformation playerInputInformation;
 
     private void Awake()
     {
@@ -27,6 +28,11 @@ public class PlayerInputLayout : MonoBehaviour
         {
             layoutSprites[i].sprite = unnasignedSprite;
         }
+    }
+
+    private void Start()
+    {
+        playerInputInformation = ptcAssigner.GetExistingPII();
     }
 
     public void Update()

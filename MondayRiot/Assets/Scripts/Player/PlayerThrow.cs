@@ -37,6 +37,7 @@ public class PlayerThrow : MonoBehaviour
         handler = this.GetComponent<PlayerHandler>();
         rightHandAnimator = handler.RightHandAnimator;
         bothHandsAnimator = handler.BothHandsAnimator;
+        bothHandTransform = handler.bothHandTransform;
         modelTransform = handler.ModelTransform;
     }
 

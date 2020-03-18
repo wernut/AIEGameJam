@@ -25,11 +25,10 @@ public class GameManager : MonoBehaviour
     //public List<TextMeshProUGUI> timerText = new List<TextMeshProUGUI>();
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI timerHeader;
-    public TextMeshProUGUI roundWinner;
-    public TextMeshProUGUI gameWinner;
+    public TextMeshProUGUI winningText;
     public List<string> timerHeaderStrings = new List<string>(3);
     public Image timerFill;
-    public Image clipboard;
+    public GameObject clipboard;
 
     [Header("Attributes")]
     public int amountOfRounds = 3;
@@ -88,16 +87,16 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    print("aa");
-                    clipboard.gameObject.SetActive(true);
                     playerRoundWinner = CheckForWinnerViaDamageDealt();
                     if (playerRoundWinner != null)
                     {
-                        roundWinner.text = "Player" + playerRoundWinner.ID + " won the round!";
+                        winningText.color = Color.black;
+                        winningText.text = "Player" + playerRoundWinner.ID + " won the round!";
                     }
                     else
                     {
-                        roundWinner.text = "It's a tie!";
+                        winningText.color = Color.black;
+                        winningText.text = "It's a tie!";
                     }
                     roundTimer = roundTimeInSeconds;
                     UpdateState(GameState.BETWEEN_ROUNDS);
@@ -106,7 +105,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.BETWEEN_ROUNDS:
-
+                clipboard.SetActive(true);
                 if (amountOfRounds == 1)
                 {
                     UpdateState(GameState.END);
@@ -126,24 +125,23 @@ public class GameManager : MonoBehaviour
                     restoreProps.RestoreAll();
                     RespawnAllPlayers();
                     SetAllPlayersControllable(true);
-
+                    clipboard.SetActive(false);
                     UpdateState(GameState.PLAYING);
                 }
                 break;
 
             case GameState.END:
+                clipboard.SetActive(true);
                 if(!hasReset)
                 {
-                    print("b");
-                    clipboard.gameObject.SetActive(true);
                     playerGameWinner = CheckForGameWinner();
                     if (playerGameWinner != null)
                     {
-                        gameWinner.text = "Player" + playerGameWinner.ID + " won the game!";
+                        winningText.text = "Player" + playerGameWinner.ID + " won the game!";
                     }
                     else
                     {
-                        gameWinner.text = "It's a tie!";
+                        winningText.text = "It's a tie!";
                     }
                     AllPlayersDropObject();
                     restoreProps.RestoreAll();
@@ -254,16 +252,24 @@ public class GameManager : MonoBehaviour
     // Checks to see if anyone has won the round:
     bool CheckForLastAlive()
     {
+        // Find how many players are alive:
         int alivePlayers = 0;
         for (int i = 0; i < playerManager.ActivePlayers.Count; ++i)
         {
             if(!playerManager.ActivePlayers[i].IsDead)
                 ++alivePlayers;
-            else if(alivePlayers == 1)
+        }
+
+        if(alivePlayers == 1)
+        {
+            for (int i = 0; i < playerManager.ActivePlayers.Count; ++i)
             {
-                playerManager.ActivePlayers[i].AmountOfRoundsWon += 1;
-                roundWinner.text = "Player" + playerManager.ActivePlayers[i].ID;
-                return true;
+                if (!playerManager.ActivePlayers[i].IsDead)
+                {
+                    playerManager.ActivePlayers[i].AmountOfRoundsWon++;
+                    winningText.text = "Player" + playerManager.ActivePlayers[i].ID + " won the round!";
+                    return true;
+                }
             }
         }
 

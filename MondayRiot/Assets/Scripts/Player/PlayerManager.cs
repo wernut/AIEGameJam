@@ -34,7 +34,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (!debugMode)
         {
-            playerInputInfo = GameObject.Find("PlayerInputInformation").GetComponent<PlayerInputInformation>();
+            playerInputInfo = FindObjectOfType<PlayerInputInformation>();
             SetupPlayerControls();
         }
         else

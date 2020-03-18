@@ -64,6 +64,7 @@ public class PlayerAttack : MonoBehaviour
     IEnumerator SwingTimer()
     {
         yield return new WaitForSecondsRealtime(0.5f);
-        handler.EquippedObject.wasJustSwung = false;
+        if(handler.EquippedObject)
+            handler.EquippedObject.wasJustSwung = false;
     }
 }

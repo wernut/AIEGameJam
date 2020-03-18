@@ -481,6 +481,11 @@ MonoBehaviour:
   bothHandAnimator: {fileID: 6444117934585317912}
   modelMaterial: {fileID: 2100000, guid: ab58f1aa8e8b44549b57c2411680f1f1, type: 2}
   arrow: {fileID: 6453941851001916748}
+  bothHandObject: {fileID: 1695602742490472826}
+  bothHandTransform: {fileID: 7109529241916798681}
+  heartUIObject: {fileID: 0}
+  heartFillImage: {fileID: 0}
+  heartText: {fileID: 0}
 --- !u!114 &6444117934444992248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -507,11 +512,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forwardForce: 5
   upForce: 2.5
-  bothHandTransform: {fileID: 7109529241916798681}
   rightHandTransform: {fileID: 6444117933106110969}
   rightHandPositionOffset: {x: 0, y: 0, z: 0}
   coolDownTime: 0.5
-  waitInRealTimeDivider: 10
   sphereCastRadius: 0.5
   sphereCastMaxDistance: 0.5
   layer:
@@ -530,7 +533,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efc5241029cfc0e44a4750fd051c1e31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackKey: 32
 --- !u!1 &6453941851001916748
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,7 +557,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6453941851001916748}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.123, z: 0.642}
+  m_LocalPosition: {x: 0, y: 0.123, z: 0.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2319974734876173469}

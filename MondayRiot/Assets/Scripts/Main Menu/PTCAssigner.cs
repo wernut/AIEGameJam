@@ -15,18 +15,25 @@ using XboxCtrlrInput;
 
 public class PTCAssigner : MonoBehaviour
 {
-    public PlayerInputInformation playerInputInfo;
+    public PlayerInputInformation playerInputInfoPrefab;
     public PlayerInputLayout playerInputLayout;
     public string nameOfSceneToLoad;
+    public AudioSource join, start;
+    public CanvasGroup fade;
     private int connectedControllers = 0;
     private List<XboxController> unassignedControllers = new List<XboxController>();
     private List<XboxController> assignedControllers = new List<XboxController>();
-    public AudioSource join, start;
-    public CanvasGroup fade;
-    bool fading;
+    private bool fading;
+    private PlayerInputInformation existingPII;
 
     void Start()
     {
+        PlayerInputInformation infoObject = FindObjectOfType<PlayerInputInformation>();
+        if (infoObject != null)
+            Destroy(infoObject.gameObject);
+
+        existingPII = Instantiate(playerInputInfoPrefab);
+
         FindConnectedControllers();
     }
 
@@ -59,7 +66,7 @@ public class PTCAssigner : MonoBehaviour
     void Update()
     {
         // Only allow 1 KBAM input:
-        if (!playerInputInfo.KBAMActive)
+        if (!existingPII.KBAMActive)
         {
             if (Input.GetKeyUp(KeyCode.Return))
             {
@@ -67,9 +74,9 @@ public class PTCAssigner : MonoBehaviour
                 PlayerInputInformation.InputMode inputMode;
                 inputMode.assignedController = (XboxController)(-1);
                 inputMode.KBAM = true;
-                playerInputInfo.AddInputInfo(inputMode);
-                playerInputInfo.KBAMActive = true;
-                playerInputInfo.PlayerCount++;
+                existingPII.AddInputInfo(inputMode);
+                existingPII.KBAMActive = true;
+                existingPII.PlayerCount++;
             }
         }
 
@@ -93,13 +100,14 @@ public class PTCAssigner : MonoBehaviour
             }
         }
 
-        if(playerInputInfo.PlayerCount > 1)
+        if(existingPII.PlayerCount > 1)
         {
-            if(!fading && Input.GetKeyUp(KeyCode.Return) || XCI.GetButtonUp(XboxButton.Start, XboxController.All))
-            {
-                fading = true;
-                StartCoroutine(PlayStart(start, start.clip.length));
-            }
+            StartCoroutine(CheckForStart());
+            //if(!fading && Input.GetKeyUp(KeyCode.Return) || XCI.GetButtonUp(XboxButton.Start, XboxController.All))
+            //{
+            //    fading = true;
+            //    StartCoroutine(PlayStart(start, start.clip.length));
+            //}
         }
     }
 
@@ -109,12 +117,22 @@ public class PTCAssigner : MonoBehaviour
         PlayerInputInformation.InputMode inputMode;
         inputMode.assignedController = xboxController;
         inputMode.KBAM = false;
-        playerInputInfo.AddInputInfo(inputMode);
-        playerInputInfo.PlayerCount++;
+        existingPII.AddInputInfo(inputMode);
+        existingPII.PlayerCount++;
 
         // Swapping lists:
         unassignedControllers.Remove(xboxController);
         assignedControllers.Add(xboxController);
+    }
+
+    IEnumerator CheckForStart()
+    {
+        yield return new WaitForSecondsRealtime(0.5f);
+        if (!fading && Input.GetKeyUp(KeyCode.Return) || XCI.GetButtonUp(XboxButton.Start, XboxController.All))
+        {
+            fading = true;
+            StartCoroutine(PlayStart(start, start.clip.length));
+        }
     }
 
     public IEnumerator PlayStart(AudioSource a, float fadetime)
@@ -136,5 +154,10 @@ public class PTCAssigner : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         SceneManager.LoadScene(nameOfSceneToLoad);
+    }
+
+    public PlayerInputInformation GetExistingPII()
+    {
+        return existingPII;
     }
 }

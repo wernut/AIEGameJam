@@ -45,6 +45,8 @@ public class PlayerHandler : MonoBehaviour
     private Material modelMaterial;
     [SerializeField]
     private GameObject arrow;
+    public GameObject bothHandObject;
+    public Transform bothHandTransform;
 
     [Header("UI References")]
     public GameObject heartUIObject;
@@ -62,6 +64,8 @@ public class PlayerHandler : MonoBehaviour
     private float totalDamageDealt = 0.0f;
     private PlayerThrow throwScript;
     private int roundsWon = 0;
+    private bool diedWithObjectEquppied = false;
+    private Vector3 originHandPos = Vector3.zero;
 
     private void Awake()
     {
@@ -81,7 +85,11 @@ public class PlayerHandler : MonoBehaviour
         if (currentHealth <= 0)
         {
             isDead = true;
-            throwScript.InstantDrop();
+            if (equippedObject != null)
+            {
+                throwScript.InstantDrop();
+                diedWithObjectEquppied = true;
+            }
             ModelTransform.gameObject.SetActive(false);
             currentHealth = totalHealth;
         }
@@ -229,6 +237,14 @@ public class PlayerHandler : MonoBehaviour
     // Respawns the player:
     public void RespawnPlayer()
     {
+        if(diedWithObjectEquppied)
+        {
+            bothHandAnimator.enabled = false;
+            bothHandObject.transform.localPosition = Vector3.zero;
+            bothHandObject.transform.localRotation = Quaternion.identity;
+            bothHandAnimator.enabled = true;
+            diedWithObjectEquppied = false;
+        }
         currentHealth = totalHealth;
         UpdateHeartUI();
         ModelTransform.gameObject.SetActive(true);
