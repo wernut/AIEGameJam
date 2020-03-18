@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/TitleScene.unity
     guid: 42c9170e26651c74c9cfcdbb16e8e8d3
   - enabled: 1
-    path: Assets/Scenes/Lachlan/LW - Test Scene.unity
-    guid: 12b7e08c7d701c243bab1fb49e3225ef
+    path: Assets/Scenes/MainScene.unity
+    guid: 3657976e5d6e56349b0298faeec787d3
   m_configObjects: {}
