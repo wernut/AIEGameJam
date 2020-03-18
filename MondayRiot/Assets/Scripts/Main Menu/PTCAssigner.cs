@@ -23,6 +23,7 @@ public class PTCAssigner : MonoBehaviour
     private List<XboxController> assignedControllers = new List<XboxController>();
     public AudioSource join, start;
     public CanvasGroup fade;
+    bool fading;
 
     void Start()
     {
@@ -94,8 +95,9 @@ public class PTCAssigner : MonoBehaviour
 
         if(playerInputInfo.PlayerCount > 1)
         {
-            if(Input.GetKeyUp(KeyCode.Return) || XCI.GetButtonUp(XboxButton.Start, XboxController.All))
+            if(!fading && Input.GetKeyUp(KeyCode.Return) || XCI.GetButtonUp(XboxButton.Start, XboxController.All))
             {
+                fading = true;
                 StartCoroutine(PlayStart(start, start.clip.length));
             }
         }
