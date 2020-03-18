@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
+                    print("aa");
                     clipboard.gameObject.SetActive(true);
                     playerRoundWinner = CheckForWinnerViaDamageDealt();
                     if (playerRoundWinner != null)
@@ -133,6 +134,7 @@ public class GameManager : MonoBehaviour
             case GameState.END:
                 if(!hasReset)
                 {
+                    print("b");
                     clipboard.gameObject.SetActive(true);
                     playerGameWinner = CheckForGameWinner();
                     if (playerGameWinner != null)
@@ -199,11 +201,11 @@ public class GameManager : MonoBehaviour
     {
         //gamestatePanels[(int)currentState].SetActive(false);
         currentState = nextState;
-        if (nextState == GameState.END)
+        if (currentState == GameState.END)
         {
             gamestatePanels[(int)currentState].SetActive(true);
         }
-        if (nextState == GameState.PLAYING)
+        if (currentState == GameState.PLAYING)
         {
             clipboard.gameObject.SetActive(false);
         }

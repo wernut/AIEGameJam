@@ -1415,10 +1415,12 @@ MonoBehaviour:
   - 'Time left in round:'
   - 'Time until next round:'
   timerFill: {fileID: 487605037626146759}
+  clipboard: {fileID: 0}
   amountOfRounds: 3
   timeBeforeGameStarts: 3
   roundTimeInSeconds: 90
   timeBetweenRounds: 3
+  timeBeforeGameReloads: 5
 --- !u!1 &8397618099411296391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,7 +1750,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 8de178fb542745f4a8761ea70baead59, type: 2}
   - {fileID: 2100000, guid: cd072de6ed05a5c439fe9207641e0ec4, type: 2}
   - {fileID: 2100000, guid: 024350175439139448ce8a8888d89269, type: 2}
-  debugMode: 1
+  debugMode: 0
   playerUsingKeyboard: 1
   activePlayerCount: 1
   xboxControllers: 00000000000000000000000000000000
