@@ -90,7 +90,14 @@ public class GameManager : MonoBehaviour
                 {
                     clipboard.gameObject.SetActive(true);
                     playerRoundWinner = CheckForWinnerViaDamageDealt();
-                    roundWinner.text = "Player" + playerRoundWinner.ID;
+                    if (playerRoundWinner != null)
+                    {
+                        roundWinner.text = "Player" + playerRoundWinner.ID + " won the round!";
+                    }
+                    else
+                    {
+                        roundWinner.text = "It's a tie!";
+                    }
                     roundTimer = roundTimeInSeconds;
                     UpdateState(GameState.BETWEEN_ROUNDS);
                     SetAllPlayersControllable(false);
@@ -128,7 +135,14 @@ public class GameManager : MonoBehaviour
                 {
                     clipboard.gameObject.SetActive(true);
                     playerGameWinner = CheckForGameWinner();
-                    gameWinner.text = "Player" + playerGameWinner.ID;
+                    if (playerGameWinner != null)
+                    {
+                        gameWinner.text = "Player" + playerGameWinner.ID + " won the game!";
+                    }
+                    else
+                    {
+                        gameWinner.text = "It's a tie!";
+                    }
                     AllPlayersDropObject();
                     restoreProps.RestoreAll();
                     ResetTimers();
