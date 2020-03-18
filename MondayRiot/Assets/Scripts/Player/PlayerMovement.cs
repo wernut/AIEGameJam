@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // Exiting the function if the player isn't controllable:
-        if (!handler.IsControllable || handler.IsDead)
+        if (!handler.IsControllable || handler.IsDead || handler.BlockMovementUpdate)
             return;
 
         // Checking if the player has a controller assigned to them: 

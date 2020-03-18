@@ -14,6 +14,7 @@ public class InteractableObject : MonoBehaviour
     public bool wasJustThrown;
     public bool wasJustSwung;
     private int currentDurablility = 0;
+    private AudioSource hitAudio;
 
     // Handler of the player who through the object.
     private PlayerHandler handler;
@@ -23,6 +24,7 @@ public class InteractableObject : MonoBehaviour
     {
         rigidbody = this.GetComponent<Rigidbody>();
         currentDurablility = durablility;
+        hitAudio = this.GetComponent<AudioSource>();
     }
 
     public void Setup(PlayerHandler handler, LayerMask defaultLayer)
@@ -35,6 +37,8 @@ public class InteractableObject : MonoBehaviour
     {
         if(wasJustThrown || wasJustSwung)
         {
+            hitAudio.Play();
+
             PlayerHandler victim = collision.gameObject.GetComponentInParent<PlayerHandler>();
             if (victim != null)
             {

@@ -56,6 +56,7 @@ public class PlayerHandler : MonoBehaviour
     private bool KBAM = false;
     private XboxController assignedController = (XboxController)(-1);
     private bool isControllable = false;
+    private bool blockMovementUpdate;
     private int id = 0;
     private float currentHealth = 0.0f;
     private float currentMovementSpeed = 0.0f;
@@ -214,6 +215,13 @@ public class PlayerHandler : MonoBehaviour
     {
         get { return roundsWon; }
         set { roundsWon = value; }
+    }
+
+    // Returns and sets if the player can move or rotate:
+    public bool BlockMovementUpdate
+    {
+        get { return blockMovementUpdate;  }
+        set { blockMovementUpdate = value; }
     }
 
     // Makes the player take damage:

@@ -90,10 +90,11 @@ public class PlayerThrow : MonoBehaviour
                 handler.EquippedObject = objects[i].transform.gameObject.GetComponent<InteractableObject>();
                 if (handler.EquippedObject != null)
                 {
-                    if (handler.EquippedObject.useBothHands)
-                        PickUpObject(handler.EquippedObject, true);
-                    else
-                        PickUpObject(handler.EquippedObject, false);
+                    StartCoroutine(PickUpObject(handler.EquippedObject, handler.EquippedObject.useBothHands));
+                    //if (handler.EquippedObject.useBothHands)
+                    //    StartCoroutine(PickUpObject(handler.EquippedObject, true));
+                    //else
+                    //    StartCoroutine(PickUpObject(handler.EquippedObject, false));
                     break;
                 }
             }
@@ -116,7 +117,7 @@ public class PlayerThrow : MonoBehaviour
         StartCoroutine(DropObject());
     }
 
-    void PickUpObject(InteractableObject pickUp, bool bothHands)
+    IEnumerator PickUpObject(InteractableObject pickUp, bool bothHands)
     {
         // Setup references:
         objectLayer = pickUp.transform.gameObject.layer;
@@ -131,15 +132,20 @@ public class PlayerThrow : MonoBehaviour
 
         if (bothHands)
         {
+            bothHandsAnimator.SetTrigger("PickUp");
+            handler.BlockMovementUpdate = true;
+            yield return new WaitForSecondsRealtime(0.2f);
+            handler.BlockMovementUpdate = false;
+
             // If requires both hands, slow the movement down via the objects mass:
-            handler.CurrentSpeed = handler.defaultMovementSpeed / (handler.EquippedObject.Rigidbody.mass * 0.15f);
+            if(handler.EquippedObject.Rigidbody.mass > 1)
+                handler.CurrentSpeed = handler.defaultMovementSpeed / (handler.EquippedObject.Rigidbody.mass * 0.15f);
 
             // Set position and parent:
             handler.EquippedObject.transform.SetParent(bothHandTransform);
             handler.EquippedObject.transform.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
             handler.EquippedObject.transform.localPosition = Vector3.zero + handler.EquippedObject.bothHandOffset;
             handler.EquippedObject.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-            bothHandsAnimator.SetTrigger("PickUp");
         }
         else
         {
