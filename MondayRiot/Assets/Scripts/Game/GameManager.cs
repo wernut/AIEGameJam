@@ -202,7 +202,10 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < playerManager.ActivePlayers.Count; ++i)
         {
-            playerManager.ActivePlayers[i].ThrowScript.InstantDrop();
+            if(playerManager.ActivePlayers[i] && playerManager.ActivePlayers[i].EquippedObject)
+            {
+                playerManager.ActivePlayers[i].ThrowScript.InstantDrop();
+            }
         }
     }
 
