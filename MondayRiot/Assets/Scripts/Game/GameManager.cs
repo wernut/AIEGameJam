@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -27,19 +27,19 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI roundWinner;
     public TextMeshProUGUI gameWinner;
     public List<string> timerHeaderStrings = new List<string>(3);
+    public Image timerFill;
+    public Image clipboard;
 
     [Header("Attributes")]
     public int amountOfRounds = 3;
     public float timeBeforeGameStarts = 5.0f;
     public float roundTimeInSeconds = 90.0f;
     public float timeBetweenRounds = 5.0f;
-    public float timeAfterGame = 10.0f;
 
     // Timers and state:
     private float beforeGameTimer = 0.0f;
     private float roundTimer = 0.0f;
     private float betweenRoundTimer = 0.0f;
-    private float gameFinishedTimer = 0.0f;
     private GameState currentState;
     private bool hasReset = false;
     private PlayerHandler playerRoundWinner, playerGameWinner;
@@ -47,7 +47,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         currentState = GameState.START;
-        gameFinishedTimer = timeAfterGame;
         ResetTimers();
     }
 
@@ -85,15 +84,9 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
+                    clipboard.gameObject.SetActive(true);
                     playerRoundWinner = CheckForWinnerViaDamageDealt();
-                    if(playerRoundWinner != null)
-                    {
-                        roundWinner.text = "Player" + playerRoundWinner.ID + " won the round!";
-                    }
-                    else
-                    {
-                        roundWinner.text = "It's a tie!";
-                    }
+                    roundWinner.text = "Player" + playerRoundWinner.ID;
                     roundTimer = roundTimeInSeconds;
                     UpdateState(GameState.BETWEEN_ROUNDS);
                     SetAllPlayersControllable(false);
@@ -101,12 +94,6 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.BETWEEN_ROUNDS:
-                if (amountOfRounds == 1)
-                {
-                    UpdateState(GameState.END);
-                    return;
-                }
-
                 if (betweenRoundTimer > 0)
                 {
                     betweenRoundTimer -= Time.deltaTime;
@@ -121,6 +108,12 @@ public class GameManager : MonoBehaviour
                     RespawnAllPlayers();
                     SetAllPlayersControllable(true);
 
+                    if (amountOfRounds == 0)
+                    {
+                        UpdateState(GameState.END);
+                        return;
+                    }
+
                     UpdateState(GameState.PLAYING);
                 }
                 break;
@@ -128,30 +121,14 @@ public class GameManager : MonoBehaviour
             case GameState.END:
                 if(!hasReset)
                 {
+                    clipboard.gameObject.SetActive(true);
                     playerGameWinner = CheckForGameWinner();
-                    if (playerGameWinner != null)
-                    {
-                        gameWinner.text = "Player" + playerGameWinner.ID + " won the game!";
-                    }
-                    else
-                    {
-                        gameWinner.text = "It's a tie!";
-                    }
+                    gameWinner.text = "Player" + playerGameWinner.ID;
                     AllPlayersDropObject();
                     restoreProps.RestoreAll();
                     ResetTimers();
                     SetAllPlayersControllable(false);
                     hasReset = true;
-                }
-                
-                if(gameFinishedTimer > 0)
-                {
-                    gameFinishedTimer -= Time.deltaTime;
-                    UpdatePanelTimer(GameState.END, gameFinishedTimer);
-                }
-                else
-                {
-                    SceneManager.LoadScene("TitleScene");
                 }
                 break;
         }
@@ -159,6 +136,13 @@ public class GameManager : MonoBehaviour
 
     void UpdatePanelTimer(GameState state, float time)
     {
+        float maxtime =
+            state == GameState.PLAYING ? roundTimeInSeconds :
+            state == GameState.BETWEEN_ROUNDS ? timeBetweenRounds :
+            state == GameState.START ? timeBeforeGameStarts :
+            time;
+
+        timerFill.fillAmount = time / maxtime;
         if (time < 10f)
         {
             timerText.fontSize = 40f;
@@ -188,32 +172,35 @@ public class GameManager : MonoBehaviour
         {
             gamestatePanels[(int)currentState].SetActive(true);
         }
+        if (nextState == GameState.PLAYING)
+        {
+            clipboard.gameObject.SetActive(false);
+        }
     }
 
     void RespawnAllPlayers()
     {
-        for (int i = 0; i < playerManager.ActivePlayers.Count; ++i)
+        for (int i = 0; i < playerManager.allPlayers.Count; ++i)
         {
-            playerManager.ActivePlayers[i].RespawnPlayer();
+            playerManager.allPlayers[i].RespawnPlayer();
         }
     }
 
     void AllPlayersDropObject()
     {
-        for (int i = 0; i < playerManager.ActivePlayers.Count; ++i)
+        /* dupes item when round is over! doesnt get rid of it */
+
+        for (int i = 0; i < playerManager.allPlayers.Count; ++i)
         {
-            if(playerManager.ActivePlayers[i] && playerManager.ActivePlayers[i].EquippedObject)
-            {
-                playerManager.ActivePlayers[i].ThrowScript.InstantDrop();
-            }
+            playerManager.allPlayers[i].ThrowScript.InstantDrop();
         }
     }
 
     void SetAllPlayersControllable(bool value)
     {
-        for (int i = 0; i < playerManager.ActivePlayers.Count; ++i)
+        for (int i = 0; i < playerManager.allPlayers.Count; ++i)
         {
-            playerManager.ActivePlayers[i].IsControllable = value;
+            playerManager.allPlayers[i].IsControllable = value;
         }
     }
 
@@ -258,10 +245,7 @@ public class GameManager : MonoBehaviour
             {
                 if (!playerManager.ActivePlayers[i].IsDead && !playerManager.ActivePlayers[j].IsDead)
                     if (playerManager.ActivePlayers[i].TotalDamageDealt > playerManager.ActivePlayers[j].TotalDamageDealt)
-                    {
                         winner = playerManager.ActivePlayers[i];
-                        winner.AmountOfRoundsWon++;
-                    }
             }
         }
 
@@ -275,9 +259,6 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < playerManager.ActivePlayers.Count; ++j)
             {
-                if (i == j)
-                    continue;
-
                 if(playerManager.ActivePlayers[i].AmountOfRoundsWon > playerManager.ActivePlayers[j].AmountOfRoundsWon)
                 {
                     winner = playerManager.ActivePlayers[i];
