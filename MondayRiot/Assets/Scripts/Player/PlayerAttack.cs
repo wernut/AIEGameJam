@@ -46,21 +46,18 @@ public class PlayerAttack : MonoBehaviour
 
     void TriggerAnimation()
     {
-        handler.EquippedObject.wasJustSwung = true;
-
-
-        if (handler.EquippedObject == null)
+        if (handler.EquippedObject != null)
         {
-            handler.RightHandAnimator.SetTrigger("Swing");
-        }
-        else if (!handler.EquippedObject.useBothHands)
-        {
-            handler.RightHandAnimator.SetTrigger("Swing");
-        }
-        else
-        {
-            handler.BothHandsAnimator.SetTrigger("Swing");
-            StartCoroutine(SwingTimer());
+            handler.EquippedObject.wasJustSwung = true;
+            if (!handler.EquippedObject.useBothHands)
+            {
+                handler.RightHandAnimator.SetTrigger("Swing");
+            }
+            else
+            {
+                handler.BothHandsAnimator.SetTrigger("Swing");
+                StartCoroutine(SwingTimer());
+            }
         }
     }
 

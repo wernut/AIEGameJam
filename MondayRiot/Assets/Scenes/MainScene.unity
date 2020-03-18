@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.6101914, g: 0.5538977, b: 0.6499773, a: 1}
+  m_IndirectSpecularColor: {r: 0.6102092, g: 0.55392236, b: 0.6499699, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11214,7 +11214,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 59.4}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1026682205
@@ -12334,6 +12334,21 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 3036932233345854964, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036932233988707425, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036932234761408642, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3306854016586385140, guid: 6700e5495f1957a47adc29a55ffdfb0f,
         type: 3}
       propertyPath: sphereCastRadius
@@ -12543,6 +12558,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8397618099399105004, guid: 6700e5495f1957a47adc29a55ffdfb0f,
         type: 3}
+      propertyPath: timerHeaderStrings.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099399105004, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
       propertyPath: storePosAndRot
       value: 
       objectReference: {fileID: 1636269589}
@@ -12561,6 +12581,26 @@ PrefabInstance:
       propertyPath: gameWinner
       value: 
       objectReference: {fileID: 1259492269}
+    - target: {fileID: 8397618099399105004, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: roundTimeInSeconds
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099399105004, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: timeAfterGame
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099399105004, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: amountOfRounds
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099399105004, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: timerHeaderStrings.Array.data[3]
+      value: 'Returning to menu in:'
+      objectReference: {fileID: 0}
     - target: {fileID: 8397618099399105005, guid: 6700e5495f1957a47adc29a55ffdfb0f,
         type: 3}
       propertyPath: m_Name
@@ -12585,6 +12625,26 @@ PrefabInstance:
         type: 3}
       propertyPath: isPlayerActive.Array.data[1]
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099760036279, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: activePlayerCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099760036279, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: xboxControllers.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099760036279, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: xboxControllers.Array.data[2]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099760036279, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: xboxControllers.Array.data[3]
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8397618099879046328, guid: 6700e5495f1957a47adc29a55ffdfb0f,
         type: 3}
@@ -12698,6 +12758,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000,
         type: 0}
+    - target: {fileID: 9042457211931509559, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6700e5495f1957a47adc29a55ffdfb0f, type: 3}
 --- !u!1001 &1096485013
