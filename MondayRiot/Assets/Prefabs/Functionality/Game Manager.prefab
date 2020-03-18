@@ -3527,6 +3527,11 @@ PrefabInstance:
       propertyPath: sphereCastRadius
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6444117933398249805, guid: 65d61d6584f2b2b4298be5d2c1bd59b0,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8de178fb542745f4a8761ea70baead59, type: 2}
     - target: {fileID: 6444117933398249807, guid: 65d61d6584f2b2b4298be5d2c1bd59b0,
         type: 3}
       propertyPath: m_AngularDrag
@@ -3906,7 +3911,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 8de178fb542745f4a8761ea70baead59, type: 2}
+      objectReference: {fileID: 2100000, guid: ab58f1aa8e8b44549b57c2411680f1f1, type: 2}
     - target: {fileID: 6444117933398249806, guid: 65d61d6584f2b2b4298be5d2c1bd59b0,
         type: 3}
       propertyPath: m_Layer
@@ -4120,7 +4125,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 024350175439139448ce8a8888d89269, type: 2}
+      objectReference: {fileID: 2100000, guid: cd072de6ed05a5c439fe9207641e0ec4, type: 2}
     - target: {fileID: 6444117933398249806, guid: 65d61d6584f2b2b4298be5d2c1bd59b0,
         type: 3}
       propertyPath: m_Layer
@@ -4334,7 +4339,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: cd072de6ed05a5c439fe9207641e0ec4, type: 2}
+      objectReference: {fileID: 2100000, guid: 024350175439139448ce8a8888d89269, type: 2}
     - target: {fileID: 6444117933398249806, guid: 65d61d6584f2b2b4298be5d2c1bd59b0,
         type: 3}
       propertyPath: m_Layer
