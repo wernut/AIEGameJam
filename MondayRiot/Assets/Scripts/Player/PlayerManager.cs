@@ -14,16 +14,19 @@ using XboxCtrlrInput;
 
 public class PlayerManager : MonoBehaviour
 {
-    public List<PlayerHandler> players = new List<PlayerHandler>();
+    public List<PlayerHandler> allPlayers = new List<PlayerHandler>();
     public List<Transform> spawnPoints = new List<Transform>();
     public List<Material> playerMaterials = new List<Material>();
     private PlayerInputInformation playerInputInfo;
+    private List<PlayerHandler> activePlayers = new List<PlayerHandler>();
 
     [Header("Debug")]
     public bool debugMode = false;
 
-    public List<bool> shouldPlayerUseKBAM = new List<bool>();
-    public List<bool> isPlayerActive = new List<bool>();
+    [Range(1, 4)]
+    public int playerUsingKeyboard = 1;
+    [Range(1, 4)]
+    public int activePlayerCount = 4;
     public List<XboxController> xboxControllers = new List<XboxController>();
 
 
@@ -36,37 +39,47 @@ public class PlayerManager : MonoBehaviour
         }
         else
             SetupViaDebugControls();
+
     }
 
     void SetupPlayerControls()
     {
         for (int i = 0; i < playerInputInfo.PlayerCount; i++)
         {
-            players[i].gameObject.SetActive(true);
-            players[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
-            players[i].ID = i + 1;
+            allPlayers[i].gameObject.SetActive(true);
+            allPlayers[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
+            allPlayers[i].ID = i + 1;
+            allPlayers[i].heartUIObject.SetActive(true);
 
             if (!playerInputInfo.GetInputInfo(i).KBAM)
             {
-                players[i].AssignedController = playerInputInfo.GetInputInfo(i).assignedController;
+                allPlayers[i].AssignedController = playerInputInfo.GetInputInfo(i).assignedController;
             }
+
+            activePlayers.Add(allPlayers[i]);
 
         }
     }
 
     void SetupViaDebugControls()
     {
-        for(int i = 0; i < 4; ++i)
+        for(int i = 0; i < activePlayerCount; ++i)
         {
-            players[i].gameObject.SetActive(true);
-            players[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
-            players[i].ID = i + 1;
+            allPlayers[i].gameObject.SetActive(true);
+            allPlayers[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
+            allPlayers[i].ID = i + 1;
+            allPlayers[i].heartUIObject.SetActive(true);
 
-            if (!isPlayerActive[i])
-                players[i].IsDead = true;
+            if (i != (playerUsingKeyboard - 1))
+                allPlayers[i].AssignedController = xboxControllers[i];
 
-            if (!shouldPlayerUseKBAM[i])
-                players[i].AssignedController = xboxControllers[i];
+            activePlayers.Add(allPlayers[i]);
         }
+    }
+
+    // Returns the players currently active:
+    public List<PlayerHandler> ActivePlayers
+    {
+        get { return activePlayers; }
     }
 }

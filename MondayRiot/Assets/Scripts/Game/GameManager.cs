@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     //public List<TextMeshProUGUI> timerText = new List<TextMeshProUGUI>();
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI timerHeader;
+    public TextMeshProUGUI roundWinner;
+    public TextMeshProUGUI gameWinner;
     public List<string> timerHeaderStrings = new List<string>(3);
     public Image timerFill;
 
@@ -39,6 +41,7 @@ public class GameManager : MonoBehaviour
     private float betweenRoundTimer = 0.0f;
     private GameState currentState;
     private bool hasReset = false;
+    private PlayerHandler playerRoundWinner, playerGameWinner;
 
     private void Start()
     {
@@ -70,9 +73,18 @@ public class GameManager : MonoBehaviour
                 {
                     roundTimer -= Time.deltaTime;
                     UpdatePanelTimer(GameState.PLAYING, roundTimer);
+
+                    if(CheckForLastAlive())
+                    {
+                        roundTimer = roundTimeInSeconds;
+                        UpdateState(GameState.BETWEEN_ROUNDS);
+                        SetAllPlayersControllable(false);
+                    }
                 }
                 else
                 {
+                    playerRoundWinner = CheckForWinnerViaDamageDealt();
+                    roundWinner.text = "Player" + playerRoundWinner.ID;
                     roundTimer = roundTimeInSeconds;
                     UpdateState(GameState.BETWEEN_ROUNDS);
                     SetAllPlayersControllable(false);
@@ -80,13 +92,6 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.BETWEEN_ROUNDS:
-
-                if(amountOfRounds == 0)
-                {
-                    UpdateState(GameState.END);
-                    return;
-                }
-
                 if (betweenRoundTimer > 0)
                 {
                     betweenRoundTimer -= Time.deltaTime;
@@ -100,6 +105,13 @@ public class GameManager : MonoBehaviour
                     restoreProps.RestoreAll();
                     RespawnAllPlayers();
                     SetAllPlayersControllable(true);
+
+                    if (amountOfRounds == 0)
+                    {
+                        UpdateState(GameState.END);
+                        return;
+                    }
+
                     UpdateState(GameState.PLAYING);
                 }
                 break;
@@ -107,6 +119,8 @@ public class GameManager : MonoBehaviour
             case GameState.END:
                 if(!hasReset)
                 {
+                    playerGameWinner = CheckForGameWinner();
+                    gameWinner.text = "Player" + playerGameWinner.ID;
                     AllPlayersDropObject();
                     restoreProps.RestoreAll();
                     ResetTimers();
@@ -159,9 +173,9 @@ public class GameManager : MonoBehaviour
 
     void RespawnAllPlayers()
     {
-        for (int i = 0; i < playerManager.players.Count; ++i)
+        for (int i = 0; i < playerManager.allPlayers.Count; ++i)
         {
-            playerManager.players[i].RespawnPlayer();
+            playerManager.allPlayers[i].RespawnPlayer();
         }
     }
 
@@ -169,17 +183,17 @@ public class GameManager : MonoBehaviour
     {
         /* dupes item when round is over! doesnt get rid of it */
 
-        for (int i = 0; i < playerManager.players.Count; ++i)
+        for (int i = 0; i < playerManager.allPlayers.Count; ++i)
         {
-            playerManager.players[i].ThrowScript.InstantDrop();
+            playerManager.allPlayers[i].ThrowScript.InstantDrop();
         }
     }
 
     void SetAllPlayersControllable(bool value)
     {
-        for (int i = 0; i < playerManager.players.Count; ++i)
+        for (int i = 0; i < playerManager.allPlayers.Count; ++i)
         {
-            playerManager.players[i].IsControllable = value;
+            playerManager.allPlayers[i].IsControllable = value;
         }
     }
 
@@ -194,5 +208,57 @@ public class GameManager : MonoBehaviour
     {
         get { return currentState;  }
         set { currentState = value; }
+    }
+
+    // Checks to see if anyone has won the round:
+    bool CheckForLastAlive()
+    {
+        int alivePlayers = 0;
+        for (int i = 0; i < playerManager.ActivePlayers.Count; ++i)
+        {
+            if(!playerManager.ActivePlayers[i].IsDead)
+                ++alivePlayers;
+            else if(alivePlayers == 1)
+            {
+                playerManager.ActivePlayers[i].AmountOfRoundsWon += 1;
+                roundWinner.text = "Player" + playerManager.ActivePlayers[i].ID;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    PlayerHandler CheckForWinnerViaDamageDealt()
+    {
+        PlayerHandler winner = null;
+        for (int i = 0; i < playerManager.ActivePlayers.Count; ++i)
+        {
+            for(int j = 0; j < playerManager.ActivePlayers.Count; ++j)
+            {
+                if (!playerManager.ActivePlayers[i].IsDead && !playerManager.ActivePlayers[j].IsDead)
+                    if (playerManager.ActivePlayers[i].TotalDamageDealt > playerManager.ActivePlayers[j].TotalDamageDealt)
+                        winner = playerManager.ActivePlayers[i];
+            }
+        }
+
+        return winner;
+    }
+
+    PlayerHandler CheckForGameWinner()
+    {
+        PlayerHandler winner = null;
+        for(int i = 0; i < playerManager.ActivePlayers.Count; ++i)
+        {
+            for (int j = 0; j < playerManager.ActivePlayers.Count; ++j)
+            {
+                if(playerManager.ActivePlayers[i].AmountOfRoundsWon > playerManager.ActivePlayers[j].AmountOfRoundsWon)
+                {
+                    winner = playerManager.ActivePlayers[i];
+                }
+            }
+        }
+
+        return winner;
     }
 }

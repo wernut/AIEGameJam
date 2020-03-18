@@ -21,6 +21,8 @@ public class PTCAssigner : MonoBehaviour
     private int connectedControllers = 0;
     private List<XboxController> unassignedControllers = new List<XboxController>();
     private List<XboxController> assignedControllers = new List<XboxController>();
+    public AudioSource join, start;
+    public CanvasGroup fade;
 
     void Start()
     {
@@ -60,6 +62,7 @@ public class PTCAssigner : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                join.Play();
                 PlayerInputInformation.InputMode inputMode;
                 inputMode.assignedController = (XboxController)(-1);
                 inputMode.KBAM = true;
@@ -82,6 +85,7 @@ public class PTCAssigner : MonoBehaviour
             // Checking for controller input:
             if (XCI.GetButton(XboxButton.A, xboxController))
             {
+                join.Play();
                 // Add controller to next avaliable slot:
                 AddController(xboxController);
                 return;
@@ -92,7 +96,7 @@ public class PTCAssigner : MonoBehaviour
         {
             if(Input.GetKeyUp(KeyCode.Return) || XCI.GetButtonUp(XboxButton.Start, XboxController.All))
             {
-                SceneManager.LoadScene(nameOfSceneToLoad);
+                StartCoroutine(PlayStart(start, start.clip.length));
             }
         }
     }
@@ -109,5 +113,26 @@ public class PTCAssigner : MonoBehaviour
         // Swapping lists:
         unassignedControllers.Remove(xboxController);
         assignedControllers.Add(xboxController);
+    }
+
+    public IEnumerator PlayStart(AudioSource a, float fadetime)
+    {
+        a.Play();
+        // For keeping track of the fade
+        float timeAtStart = Time.time;
+        float timeSinceStart;
+        float percentageComplete = 0;
+
+        while (percentageComplete < 1) // Keeps looping until the lerp is complete
+        {
+            timeSinceStart = Time.time - timeAtStart;
+            percentageComplete = timeSinceStart / fadetime;
+
+            float currentValue = Mathf.Lerp(0, 1, percentageComplete);
+
+            fade.alpha = currentValue;
+            yield return new WaitForEndOfFrame();
+        }
+        SceneManager.LoadScene(nameOfSceneToLoad);
     }
 }

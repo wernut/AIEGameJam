@@ -47,6 +47,7 @@ public class PlayerHandler : MonoBehaviour
     private GameObject arrow;
 
     [Header("UI References")]
+    public GameObject heartUIObject;
     public Image heartFillImage;
     public TextMeshProUGUI heartText;
 
@@ -60,6 +61,7 @@ public class PlayerHandler : MonoBehaviour
     private InteractableObject equippedObject;
     private float totalDamageDealt = 0.0f;
     private PlayerThrow throwScript;
+    private int roundsWon = 0;
 
     private void Awake()
     {
@@ -142,27 +144,27 @@ public class PlayerHandler : MonoBehaviour
     // Returns and sets if the player is using the keyboard:
     public bool KeyboardAndMouse
     {
-        get { return KBAM;  }
+        get { return KBAM; }
         set { KBAM = value; }
     }
 
     // Returns the material currently bound to the player:
     public Material ModelMaterial
     {
-        get { return modelMaterial;  }
+        get { return modelMaterial; }
     }
 
     // Returns and sets the ID of the player.
     public int ID
     {
-        get { return id;  }
+        get { return id; }
         set { id = value; }
     }
 
     // Returns and sets the current speed multiplier of the player:
     public float CurrentSpeed
     {
-        get { return currentMovementSpeed;  }
+        get { return currentMovementSpeed; }
         set { currentMovementSpeed = value; }
     }
 
@@ -190,7 +192,7 @@ public class PlayerHandler : MonoBehaviour
     // Returns and sets the spawn point of the player:
     public Transform SpawnPoint
     {
-        get { return spawnPoint;  }
+        get { return spawnPoint; }
     }
 
     // Returns the player throw script attached to the player:
@@ -199,10 +201,20 @@ public class PlayerHandler : MonoBehaviour
         get { return throwScript; }
     }
 
+    // Returns and sets the amount of rounds won:
+    public int AmountOfRoundsWon
+    {
+        get { return roundsWon; }
+        set { roundsWon = value; }
+    }
+
     // Makes the player take damage:
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        if (currentHealth < 0)
+            currentHealth = 0;
+
         UpdateHeartUI();
     }
 

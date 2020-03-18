@@ -1264,6 +1264,61 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3036932233345854964, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036932233988707425, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036932234761408642, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3306854016124077756, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 024350175439139448ce8a8888d89269, type: 2}
+    - target: {fileID: 3306854016555842888, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cd072de6ed05a5c439fe9207641e0ec4, type: 2}
+    - target: {fileID: 3306854016966670640, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ab58f1aa8e8b44549b57c2411680f1f1, type: 2}
+    - target: {fileID: 8397618098844954248, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618098844954248, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618098844954248, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618098844954248, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618098844954248, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8397618099399105003, guid: 6700e5495f1957a47adc29a55ffdfb0f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1319,10 +1374,50 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8397618099399105004, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: restoreProps
+      value: 
+      objectReference: {fileID: 854026641}
+    - target: {fileID: 8397618099399105004, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: roundTimeInSeconds
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8397618099399105005, guid: 6700e5495f1957a47adc29a55ffdfb0f,
         type: 3}
       propertyPath: m_Name
       value: Game Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099760036279, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: activePlayerCount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099760036279, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: xboxControllers.Array.data[1]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099760036279, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: xboxControllers.Array.data[2]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618099760036279, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: xboxControllers.Array.data[3]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8397618100002864044, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8de178fb542745f4a8761ea70baead59, type: 2}
+    - target: {fileID: 9042457211931509559, guid: 6700e5495f1957a47adc29a55ffdfb0f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6700e5495f1957a47adc29a55ffdfb0f, type: 3}
