@@ -25,7 +25,6 @@ public class PlayerThrow : MonoBehaviour
 
     [Header("Timers")]
     public float coolDownTime = 2.0f; 
-    public float waitInRealTimeDivider = 6.0f; // How long it takes for the object to be thrown. Mass / waitInRealTimeDivider
 
     [Header("Sphere Cast Attributes")]
     public float sphereCastRadius = 5.0f;
