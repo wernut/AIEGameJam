@@ -46,17 +46,17 @@ public class PlayerManager : MonoBehaviour
     {
         for (int i = 0; i < playerInputInfo.PlayerCount; i++)
         {
-            allPlayers[i].gameObject.SetActive(true);
-            allPlayers[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
-            allPlayers[i].ID = i + 1;
-            allPlayers[i].heartUIObject.SetActive(true);
+            activePlayers.Add(allPlayers[i]);
+            activePlayers[i].gameObject.SetActive(true);
+            activePlayers[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
+            activePlayers[i].ID = i + 1;
+            activePlayers[i].heartUIObject.SetActive(true);
 
             if (!playerInputInfo.GetInputInfo(i).KBAM)
             {
-                allPlayers[i].AssignedController = playerInputInfo.GetInputInfo(i).assignedController;
+                activePlayers[i].AssignedController = playerInputInfo.GetInputInfo(i).assignedController;
             }
 
-            activePlayers.Add(allPlayers[i]);
 
         }
     }
@@ -65,15 +65,15 @@ public class PlayerManager : MonoBehaviour
     {
         for(int i = 0; i < activePlayerCount; ++i)
         {
-            allPlayers[i].gameObject.SetActive(true);
-            allPlayers[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
-            allPlayers[i].ID = i + 1;
-            allPlayers[i].heartUIObject.SetActive(true);
+            activePlayers.Add(allPlayers[i]);
+            activePlayers[i].gameObject.SetActive(true);
+            activePlayers[i].ModelTransform.SetPositionAndRotation(spawnPoints[i].position, spawnPoints[i].rotation);
+            activePlayers[i].ID = i + 1;
+            activePlayers[i].heartUIObject.SetActive(true);
 
             if (i != (playerUsingKeyboard - 1))
-                allPlayers[i].AssignedController = xboxControllers[i];
+                activePlayers[i].AssignedController = xboxControllers[i];
 
-            activePlayers.Add(allPlayers[i]);
         }
     }
 
