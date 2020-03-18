@@ -61,7 +61,7 @@ public class PTCAssigner : MonoBehaviour
         // Only allow 1 KBAM input:
         if (!playerInputInfo.KBAMActive)
         {
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (Input.GetKeyUp(KeyCode.Return))
             {
                 join.Play();
                 PlayerInputInformation.InputMode inputMode;
